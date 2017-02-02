@@ -1,6 +1,6 @@
 # DogUS
 
-Pour setuper l'environement localement :
+Pour configurer l'environnement localement :
 
 - Installer GitHub
 - Istaller NodeJS
