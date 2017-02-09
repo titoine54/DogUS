@@ -1,0 +1,62 @@
+/*remove list style (circles)*/
+.goo-collapsible{
+	list-style: none;
+    font-family: 'HelveticaNeue', Arial, Helvetica, sans-serif;
+    font-size:18px;
+    padding-left: 0px;
+    position: absolute;
+        left: 0px;
+        top: 89px;
+    width: 220px;
+    }
+/*header line style and border*/
+.goo-collapsible li.header{
+	color: #666;
+    padding:4px 12px;
+    border: 1px solid #bbb;}
+/*set border for every line of menu nad remove top border becouse we dont want double border with header border. */
+.goo-collapsible li {
+	border: 1px solid #bbb;
+    border-top:0;
+    margin: 0;
+    background:#F0F0F0;}
+/*remove decoration from text links and treat it as a block.*/
+.goo-collapsible li a {
+	text-decoration:none;
+    color:#666;
+    display:block;
+    padding:8px 12px;}
+/*we dont want text to be underline as regular link*/
+.goo-collapsible li a:hover {
+	background: #F8F8F8;
+    text-decoration:none;}
+/*remove list style (circles) for submenu*/
+.goo-collapsible li ul {
+	list-style: none;
+    background: #d3d3d3;
+    display: none;
+    margin:0;
+    padding:0;}
+/*remove border and set only bottom border for submenu*/
+.goo-collapsible li ul li {
+	margin:0;
+    border:0;
+    border-bottom:1px solid #bbb;}
+/*remove bottom border from last element in submenu*/
+.goo-collapsible li ul li:last-child {
+	border-bottom:0;}
+/*set padding for submenu to be inline with maimenu*/
+.goo-collapsible li ul li a {
+	padding: 5px 10px;
+    display: block;
+    padding-left: 33px;
+    background: #d3d3d3; }
+/*remove text decoration for links*/
+.goo-collapsible li ul li a:hover {
+text-decoration: none;
+background: #d9d9d9; }
+/*for menu witch have a submenu display some icom*/
+.goo-collapsible .dropdown > a {
+	background: url(/images/arrowdown.png) no-repeat right center; }
+/*set some hover color on drop down menu*/
+.goo-collapsible .dropdown > a:hover { background: #F8F8F8 url(/images/arrowdown.png) no-repeat right center !important; }
