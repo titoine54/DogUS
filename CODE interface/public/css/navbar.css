@@ -1,0 +1,38 @@
+.navbar-custom {
+    background-color:#565656;
+    color:#ffffff;
+    border-radius:0;
+    height: 90px;
+}
+
+.navbar-custom .navbar-nav > li > a {
+    color:#fff;
+}
+.navbar-custom .navbar-nav > .active > a, .navbar-nav > .active > a:hover, .navbar-nav > .active > a:focus {
+    color: #ffffff;
+    background-color:transparent;
+}
+.navbar-custom .navbar-brand {
+    color:#eeeeee;
+    font-size: 30pt;
+    margin-top: 20px;
+}
+.navbar-custom .navbar-brand:hover {
+    color:#000000;
+}
+.navbar-custom .navbar-logo {
+    margin-top: 10px;
+}
+.navbar-custom .navbar-right {
+  margin-top: 20px;
+  font-size: x-large;
+}
+.navbar-custom .navbar-right li a:hover {
+  color: #000000;
+}
+.navbar-custom .navbar-toggle {
+  	background-color:#eeeeee;
+}
+.navbar-custom .icon-bar {
+  	background-color:#33aa33;
+}
