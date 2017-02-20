@@ -44,3 +44,17 @@ require('./app/routes.js')(app, passport); // load our routes and pass in our ap
 // launch ======================================================================
 app.listen(port);
 console.log('The magic happens on port ' + port);
+
+
+// WEB SOCKET
+const WebSocket = require('ws');
+
+const wss = new WebSocket.Server({ port: 8081 });
+
+wss.on('connection', function connection(ws) {
+  ws.on('message', function incoming(message) {
+    console.log('received: %s', message);
+  });
+
+  ws.send('Renvoie du data random');
+});

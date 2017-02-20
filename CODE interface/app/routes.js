@@ -41,28 +41,21 @@ module.exports = function(app, passport) {
         failureFlash : true // allow flash messages
     }));
 
-    // function getUserDogs(){
-    //   var mongoose = require('mongoose');
-    //   var configDB = require('../config/database.js');
-    //   mongoose.createConnection(configDB.url, function(err, db) {
-    //     if (err) {
-    //       return console.dir(err);
-    //     }
-    //     var collection = db.collection('dogs');
-    //     collection.findfind({ owner_email: req.user.email }).toArray(function (err, list_dog) {
-    //       return list_dog;
-    //     });
-    //   });
-    // }
     // =====================================
     // HOME SECTION =====================
     // =====================================
     app.get('/home', isLoggedIn, function(req, res) {
 
-      //var list_dog = getUserDogs();
+      var dogController = require('./controllers/dogController');
+
+      var dogMethods = new dogController();
+
+      dog_list = dogMethods.getUserDogs(req.user.local.email);
+      console.log(dog_list);
 
       res.render('home.ejs', {
-          user : req.user
+          user : req.user,
+          users_dog : dog_list
       });
     });
 
