@@ -4,30 +4,15 @@
 </head>
 
 <ul class="goo-collapsible">
-	<li class="dropdown"><a class="" href="#">Chien1</a>
-    <ul>
-      <li><a href="#">text 1</a></li>
-      <li><a href="#">text 2</a></li>
-      <li><a href="#">text 3</a></li>
-		</ul>
-	</li>
-  <li class="dropdown"><a class="" href="#">Chien2</a>
-    <ul>
-      <li><a href="#">text 1</a></li>
-      <li><a href="#">text 2</a></li>
-      <li><a href="#">text 3</a></li>
-		</ul>
-	</li>
-  <li class="dropdown"><a class="" href="#">Chien3</a>
-    <ul>
-      <li><a href="#">text 1</a></li>
-      <li><a href="#">text 2</a></li>
-      <li><a href="#">text 3</a></li>
-    </ul>
-  </li>
-  <li><a class="" href="/addanimal">Add Animal + </a>
-  </li>
-
+  <% for(var i=0; i < users_dog.length; i++) { %>
+  	<li class="dropdown"><a class="" href="#"><%= users_dog[i].name %></a>
+      <ul>
+        <li><a href="#">Track</a></li>
+        <li><a href="#">Informations</a></li>
+        <li><a href="#">Set Calendar</a></li>
+  		</ul>
+  	</li>
+  <% } %>
 </ul>
 
 <script>

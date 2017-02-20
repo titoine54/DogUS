@@ -50,12 +50,14 @@ module.exports = function(app, passport) {
 
       var dogMethods = new dogController();
 
-      dog_list = dogMethods.getUserDogs(req.user.local.email);
-      console.log(dog_list);
+      dogMethods.getUserDogs(req.user.local.email, function(response){
+        var dog_list = response;
 
-      res.render('home.ejs', {
-          user : req.user,
-          users_dog : dog_list
+        res.render('home.ejs', {
+            user : req.user,
+            users_dog : dog_list
+        });
+
       });
     });
 
