@@ -52,7 +52,7 @@ module.exports = function(app, passport) {
 
       dogMethods.getUserDogs(req.user.local.email, function(response){
         var dog_list = response;
-
+        req.session.users_dog = dog_list;
         res.render('home.ejs', {
             user : req.user,
             users_dog : dog_list
@@ -66,7 +66,8 @@ module.exports = function(app, passport) {
     // =====================================
     app.get('/addanimal', isLoggedIn, function(req, res) {
         res.render('addanimal.ejs', {
-            user : req.user // get the user out of session and pass to template
+            user : req.user, // get the user out of session and pass to template
+            users_dog : req.session.users_dog
         });
     });
 

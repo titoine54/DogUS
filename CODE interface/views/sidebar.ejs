@@ -3,6 +3,7 @@
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 </head>
 
+
 <ul class="goo-collapsible">
   <% for(var i=0; i < users_dog.length; i++) { %>
   	<li class="dropdown"><a class="" href="#"><%= users_dog[i].name %></a>
@@ -13,6 +14,8 @@
   		</ul>
   	</li>
   <% } %>
+  <li><a class="" href="/addanimal">Add Animal + </a></li>
+
 </ul>
 
 <script>
