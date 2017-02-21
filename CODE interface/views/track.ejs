@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+<head>
+    <title>DogUS</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> <!-- load bootstrap css -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> <!-- load fontawesome -->
+    <style>
+        body {
+          margin-top: 125px;
+          margin-right: 25px;
+          margin-bottom: 25px;
+          margin-left: 250px;
+        }
+        .formAdd {
+          max-width: 385px;
+        }
+    </style>
+</head>
+<body>
+  <div>
+    <% include navbar.ejs %>
+    <% include sidebar.ejs %>
+
+    <h1>Track</h1>
+
+    <!-- Map and Side Panel -->
+    <div class="row content">
+	
+        <!-- Google Map -->
+        <div class="col-md-7">
+			<div class="panel panel-default">
+					<!-- Panel Title -->
+					<div class="panel-heading">
+						<h2 class="panel-title text-center">Track your animal!</h2>
+					</div>
+					<!-- Panel Body -->
+					<div class="panel-body">
+						<div id="map" style="width:100%;height:400px;background:yellow><img src="holder.js/645x645"></div>
+					</div>
+				</div>
+        </div>
+		
+        <!-- Side Panel -->
+        <div class="col-md-5">
+            <div class="panel panel-default">
+                <!-- Panel Title -->
+                <div class="panel-heading">
+                    <h2 class="panel-title text-center">Positions <span class="glyphicon glyphicon-map-marker"></span></h2>
+                </div>
+                <!-- Panel Body -->
+                <div class="panel-body">
+                    <!-- Creates Form (novalidate disables HTML validation, Angular will control) -->
+                    <form name ="addForm" novalidate>
+                        <!-- Text Boxes and Other User Inputs-->
+                        <div class="form-group">
+                            <label for="latitude">Latitude</label>
+                            <input type="text" class="form-control" id="latitude" value="39.500" ng-model="formData.latitude">
+                        </div>
+                        <div class="form-group">
+                            <label for="longitude">Longitude</label>
+                            <input type="text" class="form-control" id="longitude" value="-98.350" ng-model="formData.longitude">
+                        </div>
+                        <!-- Submit button. Note that its tied to createUser() function from addCtrl. Also note ng-disabled logic which prevents early submits.  -->
+                        <button class="btn btn-danger btn-block" onclick="myMap()">Test</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  </div>
+  
+  		<script>
+		function myMap() {
+		var image = 'img/dogMarker2.png';
+		
+		var myLatLng = new google.maps.LatLng(document.getElementById("latitude").value, document.getElementById("longitude").value);
+		  var mapCanvas = document.getElementById("map");
+		  var mapOptions = {
+			center: myLatLng, zoom: 5
+		  };
+		  var map = new google.maps.Map(mapCanvas, mapOptions);
+		  
+		    var marker = new google.maps.Marker({
+    position: myLatLng,
+    map: map,
+    title: 'The Dog Name!',
+	icon: image
+  });
+		}
+		</script>
+
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiJeySB5_JKsubA2Hk8QQgZlfp85kvAhg&callback=myMap"></script>
+		
+</body>
+</html>
