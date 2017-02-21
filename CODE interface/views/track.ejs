@@ -11,9 +11,11 @@
           margin-bottom: 25px;
           margin-left: 250px;
         }
+
         .formAdd {
           max-width: 385px;
         }
+
     </style>
 </head>
 <body>
@@ -21,8 +23,10 @@
     <% include navbar.ejs %>
     <% include sidebar.ejs %>
 
-    <h1>Track</h1>
+    <h1>Track your animal with GPS</h1>
 
+    <%= dog_id %>
+							
     <!-- Map and Side Panel -->
     <div class="row content">
 	
@@ -69,24 +73,25 @@
     </div>
 
   </div>
+
   
   		<script>
 		function myMap() {
-		var image = 'img/dogMarker2.png';
-		
-		var myLatLng = new google.maps.LatLng(document.getElementById("latitude").value, document.getElementById("longitude").value);
-		  var mapCanvas = document.getElementById("map");
-		  var mapOptions = {
-			center: myLatLng, zoom: 5
-		  };
-		  var map = new google.maps.Map(mapCanvas, mapOptions);
-		  
-		    var marker = new google.maps.Marker({
-    position: myLatLng,
-    map: map,
-    title: 'The Dog Name!',
-	icon: image
-  });
+			var image = 'img/dogMarker2.png';
+			
+			var myLatLng = new google.maps.LatLng(document.getElementById("latitude").value, document.getElementById("longitude").value);
+			  var mapCanvas = document.getElementById("map");
+			  var mapOptions = {
+				center: myLatLng, zoom: 10
+			  };
+			  
+			var map = new google.maps.Map(mapCanvas, mapOptions);
+			  
+			var marker = new google.maps.Marker({
+				position: myLatLng,
+				map: map,
+				title: 'The Dog Name!'
+				});
 		}
 		</script>
 

@@ -1,5 +1,5 @@
 <head>
-  <link rel="stylesheet" type="text/css" href="css/sidebar.css">
+  <link rel="stylesheet" type="text/css" href="/css/sidebar.css">
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 </head>
 
@@ -8,9 +8,9 @@
   <% for(var i=0; i < users_dog.length; i++) { %>
   	<li class="dropdown"><a class="" href="#"><%= users_dog[i].name %></a>
       <ul>
-        <li><a href="/track">Track</a></li>
-        <li><a href="#">Informations</a></li>
-        <li><a href="#">Set Calendar</a></li>
+        <li><a href="/track/<%= users_dog[i]._id %>">Track</a></li>
+        <li><a href="/infos/<%= users_dog[i]._id %>">Informations</a></li>
+        <li><a href="/calendar/<%= users_dog[i]._id %>">Set Calendar</a></li>
   		</ul>
   	</li>
   <% } %>

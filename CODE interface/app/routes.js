@@ -1,15 +1,15 @@
 module.exports = function(app, passport) {
 
-    // =====================================
-    // HOME PAGE (with login links) ========
-    // =====================================
+// =====================================
+// INDEX PAGE (with login links) ========
+// =====================================
     app.get('/', function(req, res) {
         res.render('index.ejs'); // load the index.ejs file
     });
 
-    // =====================================
-    // LOGIN ===============================
-    // =====================================
+// =====================================
+// LOGIN ===============================
+// =====================================
     // show the login form
     app.get('/login', function(req, res) {
 
@@ -24,9 +24,9 @@ module.exports = function(app, passport) {
         failureFlash : true // allow flash messages
     }));
 
-    // =====================================
-    // SIGNUP ==============================
-    // =====================================
+// =====================================
+// SIGNUP ==============================
+// =====================================
     // show the signup form
     app.get('/signup', function(req, res) {
 
@@ -41,13 +41,12 @@ module.exports = function(app, passport) {
         failureFlash : true // allow flash messages
     }));
 
-    // =====================================
-    // HOME SECTION =====================
-    // =====================================
+// =====================================
+// HOME SECTION =====================
+// =====================================
     app.get('/home', isLoggedIn, function(req, res) {
 
       var dogController = require('./controllers/dogController');
-
       var dogMethods = new dogController();
 
       dogMethods.getUserDogs(req.user.local.email, function(response){
@@ -57,64 +56,70 @@ module.exports = function(app, passport) {
             user : req.user,
             users_dog : dog_list
         });
-
       });
     });
-
-	// =====================================
-    // DOG SECTION =====================
-    // =====================================
-		// =====================================
-		// TRACK SECTION =====================
-		// =====================================
-	app.get('/track', isLoggedIn, function(req, res) {
-        res.render('track.ejs', {
-            user : req.user,
-            users_dog : req.session.users_dog
-        });
-    });
-	
-    // =====================================
-    // ADD ANIMAL SECTION =====================
-    // =====================================
+// =====================================
+// ADD ANIMAL SECTION =================
+// =====================================
     app.get('/addanimal', isLoggedIn, function(req, res) {
-        res.render('addanimal.ejs', {
-            user : req.user, // get the user out of session and pass to template
-            users_dog : req.session.users_dog
-        });
+      res.render('addanimal.ejs', {
+          user : req.user, // get the user out of session and pass to template
+          users_dog : req.session.users_dog
+      });
     });
 
-    //add new dog
+    // Add new dog
     app.post('/addanimal', isLoggedIn, function(req,res){
-      // grab the dog model
-      var Dog = require('./models/dog');
 
-      var dog_name = req.body.dog_name;
-      var dog_age = req.body.dog_age;
-      var dog_weight = req.body.dog_weight;
-      var dog_description = req.body.dog_description;
+      var dogController = require('./controllers/dogController');
+      var dogMethods = new dogController();
 
-      // create a new dog
-      var newDog = Dog({
-        name: dog_name,
-        owner_email: req.user.local.email,
-        age: dog_age,
-        weight: dog_weight,
-        description: dog_description
+      dogMethods.addNewDog(req, function(response){
+        return res.redirect('/home');
       });
-
-      // save the dog
-      newDog.save(function(err) {
-        if (err) throw err;
-
-        console.log('Dog created for user :' + req.user.local.email);
-      });
-      return res.redirect('/home');
     });
 
-    // =====================================
-    // PROFILE SECTION =====================
-    // =====================================
+// =====================================
+// TRACKING SECTION =================
+// =====================================
+    app.get('/track/:dog_id', isLoggedIn, function(req, res) {
+      var dog_id = req.params.dog_id;
+      res.render('track.ejs', {
+          user : req.user, // get the user out of session and pass to template
+          users_dog : req.session.users_dog,
+          dog_id : dog_id
+      });
+    });
+
+// =====================================
+// INFO SECTION =================
+// =====================================
+    app.get('/infos/:dog_id', isLoggedIn, function(req, res) {
+      var dog_id = req.params.dog_id;
+      console.log(req.session.users_dog);
+      res.render('infos.ejs', {
+          user : req.user, // get the user out of session and pass to template
+          users_dog : req.session.users_dog,
+          dog_id : dog_id
+      });
+    });
+
+// =====================================
+// CALENDAR SECTION =================
+// =====================================
+    app.get('/calendar/:dog_id', isLoggedIn, function(req, res) {
+      var dog_id = req.params.dog_id;
+      console.log(req.session.users_dog);
+      res.render('calendar.ejs', {
+          user : req.user, // get the user out of session and pass to template
+          users_dog : req.session.users_dog,
+          dog_id : dog_id
+      });
+    });
+
+// =====================================
+// PROFILE SECTION =====================
+// =====================================
     // we will want this protected so you have to be logged in to visit
     // we will use route middleware to verify this (the isLoggedIn function)
     app.get('/profile', isLoggedIn, function(req, res) {
@@ -123,9 +128,9 @@ module.exports = function(app, passport) {
         });
     });
 
-    // =====================================
-    // LOGOUT ==============================
-    // =====================================
+// =====================================
+// LOGOUT ==============================
+// =====================================
     app.get('/logout', function(req, res) {
         req.logout();
         res.redirect('/');
