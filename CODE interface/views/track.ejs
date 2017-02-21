@@ -26,10 +26,10 @@
     <h1>Track your animal with GPS</h1>
 
     <%= dog_id %>
-							
+
     <!-- Map and Side Panel -->
     <div class="row content">
-	
+
         <!-- Google Map -->
         <div class="col-md-7">
 			<div class="panel panel-default">
@@ -39,11 +39,11 @@
 					</div>
 					<!-- Panel Body -->
 					<div class="panel-body">
-						<div id="map" style="width:100%;height:400px;background:yellow><img src="holder.js/645x645"></div>
+						<div id="map" style="width:100%;height:400px"><img src="holder.js/645x645"></div>
 					</div>
 				</div>
         </div>
-		
+
         <!-- Side Panel -->
         <div class="col-md-5">
             <div class="panel panel-default">
@@ -73,19 +73,19 @@
 
   </div>
 
-  
+
   		<script>
 		function myMap() {
 			var image = '/img/dogMarker2.png';
-			
+
 			  var myLatLng = new google.maps.LatLng(document.getElementById("latitude").value, document.getElementById("longitude").value);
 			  var mapCanvas = document.getElementById("map");
 			  var mapOptions = {
 				center: myLatLng, zoom: 10
 			  };
-			  
+
 			var map = new google.maps.Map(mapCanvas, mapOptions);
-			  
+
 			var marker = new google.maps.Marker({
 				position: myLatLng,
 				map: map,
@@ -96,6 +96,6 @@
 		</script>
 
 		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiJeySB5_JKsubA2Hk8QQgZlfp85kvAhg&callback=myMap" async defer></script>
-		
+
 </body>
 </html>
