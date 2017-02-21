@@ -6,7 +6,34 @@ var dogController = function (){
     Dogs.find({ owner_email: user_email },function (err, list_dog) {
       return callback(list_dog);
     });
-  }
+  };
+
+  self.addNewDog = function (req, callback){
+    // grab the dog model
+    var Dog = require('../models/dog');
+
+    var dog_name = req.body.dog_name;
+    var dog_age = req.body.dog_age;
+    var dog_weight = req.body.dog_weight;
+    var dog_description = req.body.dog_description;
+
+    // create a new dog
+    var newDog = Dog({
+      name: dog_name,
+      owner_email: req.user.local.email,
+      age: dog_age,
+      weight: dog_weight,
+      description: dog_description
+    });
+
+    // save the dog
+    newDog.save(function(err) {
+      if (err) throw err;
+
+      console.log('Dog created for user :' + req.user.local.email);
+      return callback();
+    });
+  };
 
 };
 
