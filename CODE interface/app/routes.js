@@ -85,7 +85,6 @@ module.exports = function(app, passport) {
 // =====================================
     app.get('/track/:dog_id', isLoggedIn, function(req, res) {
       var dog_id = req.params.dog_id;
-      console.log(req.session.users_dog);
       res.render('track.ejs', {
           user : req.user, // get the user out of session and pass to template
           users_dog : req.session.users_dog,
