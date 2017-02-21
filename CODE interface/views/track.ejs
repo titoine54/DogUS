@@ -54,7 +54,7 @@
                 <!-- Panel Body -->
                 <div class="panel-body">
                     <!-- Creates Form (novalidate disables HTML validation, Angular will control) -->
-                    <form name ="addForm" novalidate>
+
                         <!-- Text Boxes and Other User Inputs-->
                         <div class="form-group">
                             <label for="latitude">Latitude</label>
@@ -66,7 +66,6 @@
                         </div>
                         <!-- Submit button. Note that its tied to createUser() function from addCtrl. Also note ng-disabled logic which prevents early submits.  -->
                         <button class="btn btn-danger btn-block" onclick="myMap()">Test</button>
-                    </form>
                 </div>
             </div>
         </div>
@@ -77,9 +76,9 @@
   
   		<script>
 		function myMap() {
-			var image = 'img/dogMarker2.png';
+			var image = '/img/dogMarker2.png';
 			
-			var myLatLng = new google.maps.LatLng(document.getElementById("latitude").value, document.getElementById("longitude").value);
+			  var myLatLng = new google.maps.LatLng(document.getElementById("latitude").value, document.getElementById("longitude").value);
 			  var mapCanvas = document.getElementById("map");
 			  var mapOptions = {
 				center: myLatLng, zoom: 10
@@ -90,12 +89,13 @@
 			var marker = new google.maps.Marker({
 				position: myLatLng,
 				map: map,
-				title: 'The Dog Name!'
+				title: 'The Dog Name!',
+				icon: image
 				});
 		}
 		</script>
 
-		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiJeySB5_JKsubA2Hk8QQgZlfp85kvAhg&callback=myMap"></script>
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiJeySB5_JKsubA2Hk8QQgZlfp85kvAhg&callback=myMap" async defer></script>
 		
 </body>
 </html>
