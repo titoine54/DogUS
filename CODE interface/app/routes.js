@@ -63,10 +63,10 @@ module.exports = function(app, passport) {
 // ADD ANIMAL SECTION =================
 // =====================================
     app.get('/addanimal', isLoggedIn, function(req, res) {
-        res.render('addanimal.ejs', {
-            user : req.user, // get the user out of session and pass to template
-            users_dog : req.session.users_dog
-        });
+      res.render('addanimal.ejs', {
+          user : req.user, // get the user out of session and pass to template
+          users_dog : req.session.users_dog
+      });
     });
 
     // Add new dog
@@ -77,6 +77,45 @@ module.exports = function(app, passport) {
 
       dogMethods.addNewDog(req, function(response){
         return res.redirect('/home');
+      });
+    });
+
+// =====================================
+// TRACKING SECTION =================
+// =====================================
+    app.get('/track/:dog_id', isLoggedIn, function(req, res) {
+      var dog_id = req.params.dog_id;
+      console.log(req.session.users_dog);
+      res.render('track.ejs', {
+          user : req.user, // get the user out of session and pass to template
+          users_dog : req.session.users_dog,
+          dog_id : dog_id
+      });
+    });
+
+// =====================================
+// INFO SECTION =================
+// =====================================
+    app.get('/infos/:dog_id', isLoggedIn, function(req, res) {
+      var dog_id = req.params.dog_id;
+      console.log(req.session.users_dog);
+      res.render('infos.ejs', {
+          user : req.user, // get the user out of session and pass to template
+          users_dog : req.session.users_dog,
+          dog_id : dog_id
+      });
+    });
+
+// =====================================
+// CALENDAR SECTION =================
+// =====================================
+    app.get('/calendar/:dog_id', isLoggedIn, function(req, res) {
+      var dog_id = req.params.dog_id;
+      console.log(req.session.users_dog);
+      res.render('calendar.ejs', {
+          user : req.user, // get the user out of session and pass to template
+          users_dog : req.session.users_dog,
+          dog_id : dog_id
       });
     });
 
