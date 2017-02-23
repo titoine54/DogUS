@@ -28,7 +28,9 @@ var dogController = function (){
 
     // save the dog
     newDog.save(function(err) {
-      if (err) throw err;
+      if (err) {
+        console.log('ERROR : ' + err); // todo : Integrate logger for info, warn and error..
+      }
 
       console.log('Dog created for user :' + req.user.local.email);
       return callback();
