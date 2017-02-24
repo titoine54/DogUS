@@ -122,6 +122,37 @@ module.exports = function(app, passport) {
       });
     });
 
+    app.get('/calendar/insert/events', function(req, res){
+
+        var event= {
+            text:"test event",
+            start_date: new Date(2017,1,24,8,15),
+            end_date:   new Date(2017,1,24,11,15),
+            color: "#DD8616",
+            dog_id: '58ac8d38433e10bd3c5f7020'
+        };
+
+        var eventController = require('./controllers/eventController');
+        var eventMethods = new eventController();
+
+        eventMethods.addNewEvent(event, function(response){
+
+            res.send("Test events were added to the database")
+        });
+    });
+
+
+    app.get('/calendar/load/events', function(req, res){
+
+        var eventController = require('./controllers/eventController');
+        var eventMethods = new eventController();
+
+        eventMethods.getDogEvents(req.query.dog_id, function(data){
+            //output response
+            res.send(data);
+        });
+    });
+
 // =====================================
 // PROFILE SECTION =====================
 // =====================================
