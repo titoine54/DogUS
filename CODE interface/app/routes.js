@@ -90,13 +90,14 @@ module.exports = function(app, passport) {
 
       dogMethods.getLastPosition(req.user.local.email, dog_id, function(response){
         var dog_list = response;
-        console.log(req.user.local.email);
-        console.log(dog_list);
+        console.log(dog_list[0]);
         req.session.user_dog_position = dog_list;
         res.render('track.ejs', {
             user : req.user, // get the user out of session and pass to template
             users_dog : req.session.users_dog,
-            dog_id : dog_id
+            dog_id : dog_id,
+            lastLatitude: dog_list[0].latitude,
+            lastLongitude: dog_list[0].longitude
         });
       });
     });

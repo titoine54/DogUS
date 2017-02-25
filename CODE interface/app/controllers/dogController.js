@@ -10,11 +10,9 @@ var dogController = function (){
 
   self.getLastPosition = function (user_email, dog_id, callback){
     var gpsPosition = require('../models/gpsPosition');
-    //var Dogs = require('../models/dog');
-    console.log("user_email: " + user_email);
 
-    gpsPosition.find({},function (err, list_dog_positions) {
-      console.log(list_dog_positions);
+    //Return the last position
+    gpsPosition.find().sort({"timestamp":-1}).exec(function (err, list_dog_positions) {
       return callback(list_dog_positions);
     });
 
