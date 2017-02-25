@@ -89,15 +89,13 @@ module.exports = function(app, passport) {
       var dogMethods = new dogController();
 
       dogMethods.getLastPosition(req.user.local.email, dog_id, function(response){
-        var dog_list = response;
-        console.log(dog_list[0]);
-        req.session.user_dog_position = dog_list;
+        var lastPosition = response;
+        console.log(lastPosition);
         res.render('track.ejs', {
             user : req.user, // get the user out of session and pass to template
             users_dog : req.session.users_dog,
             dog_id : dog_id,
-            lastLatitude: dog_list[0].latitude,
-            lastLongitude: dog_list[0].longitude
+            lastPosition: lastPosition
         });
       });
     });

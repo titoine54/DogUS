@@ -4,17 +4,7 @@
     <title>DogUS</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> <!-- load bootstrap css -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> <!-- load fontawesome -->
-    <style>
-        body {
-          margin-top: 125px;
-          margin-right: 25px;
-          margin-bottom: 25px;
-          margin-left: 250px;
-        }
-        .formAdd {
-          max-width: 385px;
-        }
-    </style>
+
 </head>
 <body>
   <div>
@@ -37,7 +27,7 @@
 					</div>
 					<!-- Panel Body -->
 					<div class="panel-body">
-						<div id="map" style="width:100%;height:400px"><img src="holder.js/645x645"></div>
+						<div id="map" style="width:100%;height:400px"><img src="/img/noMap.jpg" style="width:100%;height:400px"></div>
 					</div>
 				</div>
         </div>
@@ -56,11 +46,11 @@
                         <!-- Text Boxes and Other User Inputs-->
                         <div class="form-group">
                             <label for="latitude">Latitude</label>
-                            <input type="text" class="form-control" id="latitude" value=<%= lastLatitude %> ng-model="formData.latitude">
+                            <input type="text" class="form-control" id="latitude" value=<%= lastPosition.latitude %> ng-model="formData.latitude">
                         </div>
                         <div class="form-group">
                             <label for="longitude">Longitude</label>
-                            <input type="text" class="form-control" id="longitude" value=<%= lastLongitude %> ng-model="formData.longitude">
+                            <input type="text" class="form-control" id="longitude" value=<%= lastPosition.longitude %> ng-model="formData.longitude">
                         </div>
                         <!-- Submit button. Note that its tied to createUser() function from addCtrl. Also note ng-disabled logic which prevents early submits.  -->
                         <button class="btn btn-danger btn-block" onclick="myMap()">Test</button>
@@ -72,24 +62,34 @@
   </div>
 
 
-  		<script>
+  	<script>
 		function myMap() {
 			var image = '/img/dogMarker2.png';
+      var noMap = '/img/noMap.jpg';
+      var latitude = document.getElementById("latitude").value;
+      var longitude = document.getElementById("longitude").value;
+      var map;
 
-			  var myLatLng = new google.maps.LatLng(document.getElementById("latitude").value, document.getElementById("longitude").value);
+      if (latitude & longitude) {
+			  var myLatLng = new google.maps.LatLng(latitude, longitude);
 			  var mapCanvas = document.getElementById("map");
 			  var mapOptions = {
 				center: myLatLng, zoom: 10
 			  };
 
-			var map = new google.maps.Map(mapCanvas, mapOptions);
+	       map = new google.maps.Map(mapCanvas, mapOptions);
 
-			var marker = new google.maps.Marker({
-				position: myLatLng,
-				map: map,
-				title: 'The Dog Name!',
-				icon: image
-				});
+  			 var marker = new google.maps.Marker({
+    				position: myLatLng,
+    				map: map,
+    				title: 'The Dog Name!',
+    				icon: image
+  		   });
+      } else {
+        var myImage = new Image(100, 200);
+        myImage.src = noMap;
+        map = myImage;
+      }
 		}
 		</script>
 
