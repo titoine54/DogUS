@@ -84,10 +84,20 @@ module.exports = function(app, passport) {
 // =====================================
     app.get('/track/:dog_id', isLoggedIn, function(req, res) {
       var dog_id = req.params.dog_id;
-      res.render('track.ejs', {
-          user : req.user, // get the user out of session and pass to template
-          users_dog : req.session.users_dog,
-          dog_id : dog_id
+
+      var dogController = require('./controllers/dogController');
+      var dogMethods = new dogController();
+
+      dogMethods.getLastPosition(req.user.local.email, dog_id, function(response){
+        var dog_list = response;
+        console.log(req.user.local.email);
+        console.log(dog_list);
+        req.session.user_dog_position = dog_list;
+        res.render('track.ejs', {
+            user : req.user, // get the user out of session and pass to template
+            users_dog : req.session.users_dog,
+            dog_id : dog_id
+        });
       });
     });
 
