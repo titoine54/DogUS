@@ -119,12 +119,48 @@ module.exports = function(app, passport) {
 // =====================================
     app.get('/calendar/:dog_id', isLoggedIn, function(req, res) {
       var dog_id = req.params.dog_id;
+      var dog = req.session.users_dog.find(function(dog){
+          if(dog._id === dog_id) {
+              return dog;
+          }
+      });
       console.log(req.session.users_dog);
       res.render('calendar.ejs', {
           user : req.user, // get the user out of session and pass to template
           users_dog : req.session.users_dog,
-          dog_id : dog_id
+          dog : dog
       });
+    });
+
+    app.get('/calendar/insert/events', function(req, res){
+
+        var event= {
+            text:"test event",
+            start_date: new Date(2017,1,24,8,15),
+            end_date:   new Date(2017,1,24,11,15),
+            color: "#DD8616",
+            dog_id: '58ac8d38433e10bd3c5f7020'
+        };
+
+        var eventController = require('./controllers/eventController');
+        var eventMethods = new eventController();
+
+        eventMethods.addNewEvent(event, function(response){
+
+            res.send("Test events were added to the database")
+        });
+    });
+
+
+    app.get('/calendar/load/events', function(req, res){
+
+        var eventController = require('./controllers/eventController');
+        var eventMethods = new eventController();
+
+        eventMethods.getDogEvents(req.query.dog_id, function(data){
+            //output response
+            res.send(data);
+        });
     });
 
 // =====================================

@@ -1,27 +1,72 @@
 <!doctype html>
-<html>
 <head>
-    <title>DogUS</title>
+    <title>DogUS-Calendar</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> <!-- load bootstrap css -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> <!-- load fontawesome -->
-    <style>
-        body {
-          margin-top: 125px;
-          margin-right: 25px;
-          margin-bottom: 25px;
-          margin-left: 250px;
-        }
-    </style>
+
+    <script src="/js/calendar/dhtmlxscheduler.js" type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet" type="text/css" href="/css/calendar/dhtmlxscheduler.css">
+
 </head>
-<body>
-  <div>
-    <% include navbar.ejs %>
-    <% include sidebar.ejs %>
 
-    <h1>Edit Calendar</h1>
 
-    <%= dog_id %>
+<style type="text/css" >
+    body {
+        margin-top: 125px;
+        margin-right: 25px;
+        margin-bottom: 25px;
+        margin-left: 250px;
+        overflow: hidden;
+    }
 
-  </div>
+    .formAdd {
+        max-width: 385px;
+    }
+</style>
+
+<script type="text/javascript" charset="utf-8">
+    function init() {
+        scheduler.config.xml_date="%Y-%m-%d %H:%i";
+        scheduler.init('scheduler_here',new Date(2018,0,1),"week");
+
+        scheduler.templates.xml_date = function(value){ return new Date(value); };
+        scheduler.load("/calendar/load/events?dog_id=<%= dog._id %>", "json");
+    }
+</script>
+
+<body onload="init();">
+    <div>
+        <% include navbar.ejs %>
+        <% include sidebar.ejs %>
+
+        <h1>Schedule your animals outings!</h1>
+
+        <!-- Calendar -->
+        <div class="row content">
+            <div class="panel panel-default">
+                <!-- Panel Title -->
+                <div class="panel-heading">
+                    <h2 class="panel-title text-center"><%= dog.name %>'s Calendar</h2>
+                </div>
+                <!-- Panel Body -->
+                <div class="panel-body">
+                    <div id="scheduler_here" class="dhx_cal_container" style='width:100%;height:450px'>
+                        <div class="dhx_cal_navline">
+                            <div class="dhx_cal_prev_button">&nbsp;</div>
+                            <div class="dhx_cal_next_button">&nbsp;</div>
+                            <div class="dhx_cal_today_button"></div>
+                            <div class="dhx_cal_date"></div>
+                            <div class="dhx_cal_tab" name="day_tab" style="right:204px;"></div>
+                            <div class="dhx_cal_tab" name="week_tab" style="right:140px;"></div>
+                            <div class="dhx_cal_tab" name="month_tab" style="right:76px;"></div>
+                        </div>
+                        <div class="dhx_cal_header">
+                        </div>
+                        <div class="dhx_cal_data">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
-</html>
