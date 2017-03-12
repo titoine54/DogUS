@@ -6,6 +6,9 @@ This software is covered by GPL license. You also can obtain Commercial or Enter
 
 (c) Dinamenta, UAB.
 */
+
+/* Event color 1586 */
+
 .dhtmlx_message_area {
     position: fixed;
     right: 5px;
@@ -1578,7 +1581,7 @@ input.dhx_repeat_checkbox {
 }
 
 .dhx_cal_event .dhx_body, .dhx_cal_event .dhx_footer, .dhx_cal_event .dhx_header, .dhx_cal_event .dhx_title {
-    background-color: #1796b0;
+    background-color: #4286f4;
     border-color: transparent;
     color: #fff
 }

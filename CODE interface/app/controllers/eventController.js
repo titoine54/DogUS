@@ -6,41 +6,36 @@ var eventController = function (){
 
         Events.find({ dog_id: dog_id },function (err, list_event) {
             //set id property for all records
-            for (var i = 0; i < list_event.length; i++)
-                list_event[i].id = list_event[i]._id;
+            //for (var i = 0; i < list_event.length; i++)
+            //list_event[i].id = list_event[i].id;
 
             callback(list_event);
         });
     };
 
-    self.addNewEvent = function (event, callback){
+    self.addNewEvent = function (event, dog_id, sid, callback){
         // grab the dog model
         var Event = require('../models/event');
 
-        var event_text = event.text;
-        var event_start_date = event.start_date;
-        var event_end_date = event.end_date;
-        var event_color = event.color;
-        var event_dog_id = event.dog_id;
-
         // create a new dog
         var newEvent = Event({
-            text: event_text,
-            start_date: event_start_date,
-            end_date: event_end_date,
-            color: event_color,
-            dog_id: event_dog_id
+            text: event.text,
+            start_date: event.start_date,
+            end_date: event.end_date,
+            color: event.color,
+            dog_id: dog_id,
+            id: sid
         });
 
         // save the dog
-        newEvent.save(function(err) {
-            if (err) {
-                console.log('ERROR : ' + err); // todo : Integrate logger for info, warn and error..
-            }
+        newEvent.save(callback);
+    };
 
-            console.log('Event created!');
-            callback();
-        });
+    self.deleteEvent = function (event_id, callback){
+        // grab the event model
+        var Event = require('../models/event');
+
+        Event.find({id: event_id}).remove(callback);
     };
 
 };

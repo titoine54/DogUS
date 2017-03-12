@@ -27,10 +27,16 @@
 <script type="text/javascript" charset="utf-8">
     function init() {
         scheduler.config.xml_date="%Y-%m-%d %H:%i";
-        scheduler.init('scheduler_here',new Date(2018,0,1),"week");
+        scheduler.init('scheduler_here',new Date(),"week");
 
         scheduler.templates.xml_date = function(value){ return new Date(value); };
         scheduler.load("/calendar/load/events?dog_id=<%= dog._id %>", "json");
+
+        scheduler.config.xml_date="%Y-%m-%d %H:%i";
+
+        var dp = new dataProcessor("/calendar/insert/events?dog_id=<%= dog._id %>");
+        dp.init(scheduler);
+        dp.setTransactionMode("POST", false);
     }
 </script>
 

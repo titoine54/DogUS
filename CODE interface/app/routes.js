@@ -131,23 +131,48 @@ module.exports = function(app, passport) {
       });
     });
 
-    app.get('/calendar/insert/events', function(req, res){
-
-        var event= {
-            text:"test event",
-            start_date: new Date(2017,1,24,8,15),
-            end_date:   new Date(2017,1,24,11,15),
-            color: "#DD8616",
-            dog_id: '58ac8d38433e10bd3c5f7020'
-        };
-
+    app.post('/calendar/insert/events', function(req, res){
         var eventController = require('./controllers/eventController');
         var eventMethods = new eventController();
 
-        eventMethods.addNewEvent(event, function(response){
+        var data = req.body;
 
-            res.send("Test events were added to the database")
-        });
+        //get operation type
+        var mode = data["!nativeeditor_status"];
+        //get id of record
+        var sid = data.id;
+        var tid = sid;
+
+        //remove properties which we do not want to save in DB
+        delete data.id;
+        delete data.gr_id;
+        delete data["!nativeeditor_status"];
+
+
+        //output confirmation response
+        function update_response(err, result){
+            if (err)
+                mode = "error";
+            //else if (mode == "inserted")
+            //tid = data._id;
+
+            res.setHeader("Content-Type","text/xml");
+            res.send("<data><action type='"+mode+"' sid='"+sid+"' tid='"+tid+"'/></data>");
+        }
+
+        //run db operation
+        if (mode == "updated")
+            res.send("Not supported operation");
+        else if (mode == "inserted")
+            eventMethods.addNewEvent(data, req.query.dog_id, sid, update_response);
+        else if (mode == "deleted")
+            eventMethods.deleteEvent(sid, update_response);
+        else
+            res.send("Not supported operation");
+
+
+
+
     });
 
 

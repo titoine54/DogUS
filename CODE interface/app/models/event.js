@@ -7,8 +7,9 @@ var eventSchema = mongoose.Schema({
     text: { type: String, required: true},
     start_date: { type: Date, required: true},
     end_date: { type: Date, required: true},
-    color: { type: String, required: true},
-    dog_id: { type: String, required: true}
+    color: { type: String, default: "#4286f4", required: false},
+    dog_id: { type: String, required: true},
+    id: { type: String, required: true}
 });
 
 // create the model for users and expose it to our app
