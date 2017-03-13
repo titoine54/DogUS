@@ -31,6 +31,13 @@ var eventController = function (){
         newEvent.save(callback);
     };
 
+    self.updateEvents = function (newData, event_id, callback) {
+        var Event = require('../models/event');
+
+        Event.findOneAndUpdate({id: event_id}, newData, callback);
+
+    };
+
     self.deleteEvent = function (event_id, callback){
         // grab the event model
         var Event = require('../models/event');
