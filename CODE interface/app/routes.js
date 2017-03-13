@@ -88,7 +88,7 @@ module.exports = function(app, passport) {
       var dogController = require('./controllers/dogController');
       var dogMethods = new dogController();
 
-      dogMethods.getLastPosition(req.user.local.email, dog_id, function(response){
+      dogMethods.getLastPosition(dog_id, function(response){
         var lastPosition = response;
         console.log(lastPosition);
         res.render('track.ejs', {

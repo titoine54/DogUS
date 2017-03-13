@@ -48,13 +48,20 @@ app.listen(port);
 console.log('The magic happens on port ' + port);
 
 
-// WEB SOCKET
+// WEB SOCKET ===============================================================================================
 const WebSocket = require('ws');
 
 const wss = new WebSocket.Server({ port: 8081 });
 
 wss.on('connection', function connection(ws) {
   ws.on('message', function incoming(message) {
+    var gpsController = require('./app/controllers/gpsController');
+    var gpsMethods = new gpsController();
+
+    gpsMethods.addPositionToDB(message, function(response){
+      return;
+    });
+
     ws.send('This is the response !!!');
     console.log('Received: %s', message);
   });
