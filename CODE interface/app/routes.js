@@ -131,7 +131,7 @@ module.exports = function(app, passport) {
       });
     });
 
-    app.post('/calendar/insert/events', function(req, res){
+    app.post('/calendar/update/events', function(req, res){
         var eventController = require('./controllers/eventController');
         var eventMethods = new eventController();
 
@@ -151,8 +151,13 @@ module.exports = function(app, passport) {
 
         //output confirmation response
         function update_response(err, result){
-            if (err)
+            if (err) {
+                console.log('ERROR - event : [' + sid + '] wasnt ' + mode);
                 mode = "error";
+            } else {
+                console.log('INFO - event : [' + sid + '] was successfully ' + mode);
+            }
+
             //else if (mode == "inserted")
             //tid = data._id;
 
@@ -160,19 +165,22 @@ module.exports = function(app, passport) {
             res.send("<data><action type='"+mode+"' sid='"+sid+"' tid='"+tid+"'/></data>");
         }
 
+        console.log('INFO - event : [' + sid + '] will be ' + mode);
         //run db operation
-        if (mode == "updated")
-            res.send("Not supported operation");
-        else if (mode == "inserted")
+        if (mode == "updated") {
+            eventMethods.updateEvents(data, sid, update_response);
+        }
+
+        else if (mode == "inserted") {
             eventMethods.addNewEvent(data, req.query.dog_id, sid, update_response);
-        else if (mode == "deleted")
+        }
+
+        else if (mode == "deleted") {
             eventMethods.deleteEvent(sid, update_response);
-        else
+        }
+        else {
             res.send("Not supported operation");
-
-
-
-
+        }
     });
 
 

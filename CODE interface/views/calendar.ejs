@@ -34,7 +34,7 @@
 
         scheduler.config.xml_date="%Y-%m-%d %H:%i";
 
-        var dp = new dataProcessor("/calendar/insert/events?dog_id=<%= dog._id %>");
+        var dp = new dataProcessor("/calendar/update/events?dog_id=<%= dog._id %>");
         dp.init(scheduler);
         dp.setTransactionMode("POST", false);
     }
