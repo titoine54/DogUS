@@ -123,11 +123,12 @@ module.exports = function(app, passport) {
               return dog;
           }
       });
-      console.log(req.session.users_dog);
+      //console.log(req.session.users_dog);
       res.render('calendar.ejs', {
           user : req.user, // get the user out of session and pass to template
           users_dog : req.session.users_dog,
-          dog : dog
+          dog : dog,
+          dog_id : dog_id
       });
     });
 

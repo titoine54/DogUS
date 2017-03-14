@@ -6,7 +6,7 @@
 
 <ul class="goo-collapsible">
   <% for(var i=0; i < users_dog.length; i++) { %>
-  	<li class="dropdown"><a class="" href="#"><%= users_dog[i].name %></a>
+  	<li class="dropdown"><a class="" dogid="<%= users_dog[i]._id %>" href="#"><%= users_dog[i].name %></a>
       <ul>
         <li><a href="/track/<%= users_dog[i]._id %>">Track</a></li>
         <li><a href="/infos/<%= users_dog[i]._id %>">Informations</a></li>
