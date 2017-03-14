@@ -152,7 +152,7 @@ module.exports = function(app, passport) {
         //output confirmation response
         function update_response(err, result){
             if (err) {
-                console.log('ERROR - event : [' + sid + '] wasnt ' + mode);
+                console.log('ERROR - event : [' + sid + '] wasnt ' + mode + ' : ' + err);
                 mode = "error";
             } else {
                 console.log('INFO - event : [' + sid + '] was successfully ' + mode);

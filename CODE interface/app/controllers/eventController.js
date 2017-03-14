@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 var eventController = function (){
     var self = this;
 
@@ -5,23 +7,49 @@ var eventController = function (){
         var Events = require('../models/event');
 
         Events.find({ dog_id: dog_id },function (err, list_event) {
-            //set id property for all records
-            //for (var i = 0; i < list_event.length; i++)
-            //list_event[i].id = list_event[i].id;
+            var events = [];
+            _.each(list_event, function(savedEvent) {
+                var currentDay = moment().isoWeekday();
+                var startTime;
+                var endTime;
 
-            callback(list_event);
+                if(savedEvent.day > currentDay) {
+                    startTime = moment(savedEvent.start_time, 'hh:mm:ss a').add(savedEvent.day - currentDay, 'day');
+                    endTime = moment(savedEvent.end_time, 'hh:mm:ss a').add(savedEvent.day - currentDay, 'day');
+
+                } else if (savedEvent.day < currentDay) {
+                    startTime = moment(savedEvent.start_time, 'hh:mm:ss a').subtract(currentDay - savedEvent.day, 'day');
+                    endTime = moment(savedEvent.end_time, 'hh:mm:ss a').subtract(currentDay - savedEvent.day, 'day');
+                }
+
+                var event = {
+                    id : savedEvent.id,
+                    text: savedEvent.text,
+                    start_date: startTime,
+                    end_date: endTime,
+                    color: savedEvent.color,
+                    dog_id: savedEvent.dog_id
+                };
+                events.push(event);
+            });
+
+            callback(events);
         });
     };
 
     self.addNewEvent = function (event, dog_id, sid, callback){
         // grab the dog model
         var Event = require('../models/event');
+        var day = moment(event.start_date).isoWeekday();
+        var startTime = moment(event.start_date).format("hh:mm:ss a");
+        var endTime = moment(event.end_date).format("hh:mm:ss a");
 
-        // create a new dog
+        // create a new event
         var newEvent = Event({
             text: event.text,
-            start_date: event.start_date,
-            end_date: event.end_date,
+            day: day,
+            start_time: startTime,
+            end_time: endTime,
             color: event.color,
             dog_id: dog_id,
             id: sid
@@ -34,8 +62,21 @@ var eventController = function (){
     self.updateEvents = function (newData, event_id, callback) {
         var Event = require('../models/event');
 
-        Event.findOneAndUpdate({id: event_id}, newData, callback);
+        var day = moment(newData.start_date).isoWeekday();
+        var startTime = moment(newData.start_date).format("hh:mm:ss a");
+        var endTime = moment(newData.end_date).format("hh:mm:ss a");
 
+        var event = {
+            text: newData.text,
+            day: day,
+            start_time: startTime,
+            end_time: endTime,
+            color: newData.color,
+            dog_id: newData.dog_id,
+            id: event_id
+        };
+
+        Event.findOneAndUpdate({id: event_id}, event, callback);
     };
 
     self.deleteEvent = function (event_id, callback){
