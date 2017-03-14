@@ -17,6 +17,9 @@
   <div>
     <% include navbar.ejs %>
     <% include sidebar.ejs %>
+    <script>
+      $( "a[dogid='<%= dog_id %>']" ).trigger( "click" );
+    </script>
 
     <h1>Animal's Information</h1>
 
