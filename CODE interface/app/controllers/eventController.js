@@ -14,12 +14,12 @@ var eventController = function (){
                 var endTime;
 
                 if(savedEvent.day > currentDay) {
-                    startTime = moment(savedEvent.start_time, 'hh:mm:ss a').add(savedEvent.day - currentDay, 'day');
-                    endTime = moment(savedEvent.end_time, 'hh:mm:ss a').add(savedEvent.day - currentDay, 'day');
+                    startTime = new Date(moment(savedEvent.start_time, 'hh:mm:ss a').add(savedEvent.day - currentDay, 'day').format("YYYY-MM-DD HH:mm"));
+                    endTime = new Date(moment(savedEvent.end_time, 'hh:mm:ss a').add(savedEvent.day - currentDay, 'day').format("YYYY-MM-DD HH:mm"));
 
                 } else if (savedEvent.day < currentDay) {
-                    startTime = moment(savedEvent.start_time, 'hh:mm:ss a').subtract(currentDay - savedEvent.day, 'day');
-                    endTime = moment(savedEvent.end_time, 'hh:mm:ss a').subtract(currentDay - savedEvent.day, 'day');
+                    startTime = new Date(moment(savedEvent.start_time, 'hh:mm:ss a').subtract(currentDay - savedEvent.day, 'day').format("YYYY-MM-DD HH:mm"));
+                    endTime = new Date(moment(savedEvent.end_time, 'hh:mm:ss a').subtract(currentDay - savedEvent.day, 'day').format("YYYY-MM-DD HH:mm"));
                 }
 
                 var event = {
