@@ -56,7 +56,52 @@ var dogController = function (){
         console.log('ERROR : ' + err); // todo : Integrate logger for info, warn and error..
       }
 
-      console.log('Dog created for user :' + req.user.local.email);
+      console.log('Dog created for user : ' + req.user.local.email);
+      return callback();
+    });
+  };
+
+  self.editDog = function (req, callback){
+    // grab the dog model
+    var Dog = require('../models/dog');
+
+    var dog_name = req.body.dog_name;
+    var dog_age = req.body.dog_age;
+    var dog_weight = req.body.dog_weight;
+    var dog_description = req.body.dog_description;
+
+    var dog_id = req.params.dog_id;
+
+    // create a new dog
+    var updatedDog = {
+      name: dog_name,
+      age: dog_age,
+      weight: dog_weight,
+      description: dog_description
+    };
+
+    // save the dog
+    Dog.findOneAndUpdate({_id: dog_id}, updatedDog, function(err) {
+      if (err) {
+        console.log('ERROR : ' + err); // todo : Integrate logger for info, warn and error..
+      }
+
+      console.log('Dog edited for user : ' + req.user.local.email);
+      return callback();
+    });
+  };
+
+  self.deleteDog = function (req, dog_id, callback){
+    // grab the dog model
+    var Dog = require('../models/dog');
+
+    // delete dog
+    Dog.find({ _id: dog_id }).remove(function(err) {
+      if (err) {
+        console.log('ERROR : ' + err); // todo : Integrate logger for info, warn and error..
+      }
+
+      console.log('Dog deleted by user : ' + req.user.local.email);
       return callback();
     });
   };

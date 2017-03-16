@@ -105,12 +105,33 @@ module.exports = function(app, passport) {
 // =====================================
     app.get('/infos/:dog_id', isLoggedIn, function(req, res) {
       var dog_id = req.params.dog_id;
-      console.log(req.session.users_dog);
+      var selected_dog = req.session.users_dog.find(o => o._id === dog_id);
+
       res.render('infos.ejs', {
           user : req.user, // get the user out of session and pass to template
           users_dog : req.session.users_dog,
-          dog_id : dog_id
+          dog_id : dog_id,
+          selected_dog : selected_dog
       });
+    });
+
+    // Edit dog
+    app.post('/infos/:dog_id', isLoggedIn, function(req,res){
+
+      var dog_id = req.params.dog_id;
+      var dogController = require('./controllers/dogController');
+      var dogMethods = new dogController();
+
+      if (req.body.type == "Save") {
+        dogMethods.editDog(req, function(response){
+          return res.redirect('/home');
+        });
+      } else if (req.body.type == "Delete") {
+        dogMethods.deleteDog(req, dog_id, function(response){
+          return res.redirect('/home');
+        });
+      }
+
     });
 
 // =====================================
