@@ -2452,7 +2452,7 @@ scheduler.formSection = function (e) {
         }
     }, time: {
         render: function (e) {
-            e.time_format || (e.time_format = ["%H:%i", "%d", "%m", "%Y"]), e._time_format_order = {};
+            e.time_format || (e.time_format = ["%H:%i"]), e._time_format_order = {};
             var t = e.time_format, i = scheduler.config, a = this.date.date_part(scheduler._currentDate()), r = 1440, s = 0;
             scheduler.config.limit_time_select && (r = 60 * i.last_hour + 1, s = 60 * i.first_hour, a.setHours(i.first_hour));
             for (var n = "", d = 0; d < t.length; d++) {
