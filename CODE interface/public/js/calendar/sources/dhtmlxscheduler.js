@@ -6007,7 +6007,7 @@ scheduler.form_blocks={
 		render:function(sns) {
 			if (!sns.time_format) {
 				// default order
-				sns.time_format = ["%H:%i", "%d", "%m", "%Y"];
+				sns.time_format = ["%H:%i"];
 			}
 			// map: default order => real one
 			sns._time_format_order = {};
