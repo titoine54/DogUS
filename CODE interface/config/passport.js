@@ -59,18 +59,53 @@ module.exports = function(passport) {
                // create the user
                var newUser            = new User();
 
+              var random_url = "";
+              var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+              for( var i=0; i < 40; i++ )
+                random_url += possible.charAt(Math.floor(Math.random() * possible.length));
+
                // set the user's local credentials
                newUser.local.email    = email;
                newUser.local.password = newUser.generateHash(password);
+               newUser.local.active   = false;
+               newUser.local.verif_url = random_url;
 
                // save the user
                newUser.save(function(err) {
-                   if (err)
-                       throw err;
-                   return done(null, newUser);
-               });
-           }
+                   if (err) {
+                     throw err;
+                   }
 
+                  var nodemailer = require('nodemailer');
+                  var transporter = nodemailer.createTransport({
+                    service: 'Gmail',
+                    auth: {
+                        user: 'senderdogus@gmail.com',
+                        pass: '%Dogus60***'
+                    }
+                  });
+
+                  var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+
+                  var mailOptions = {
+                    from: 'senderdogus@gmail.com', // sender address
+                    to: email,
+                    subject: 'Account Verification', // Subject line
+                    text: 'Please confirm your account by clicking the following link: '
+                      + fullUrl + '/verification-email/' + random_url
+                  };
+
+                  transporter.sendMail(mailOptions, function(error, info){
+                    if(error){
+                        console.log(error);
+                    }else{
+                        console.log('Message sent: ' + info.response);
+                    };
+                  });
+                  return done(null, newUser);
+              });
+           }
        });
 
        });
