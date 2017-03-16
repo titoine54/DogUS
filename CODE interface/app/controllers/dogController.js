@@ -48,7 +48,6 @@ var dogController = function (){
 
     var dog_id = req.params.dog_id;
 
-    // create a new dog
     var updatedDog = {
       name: dog_name,
       age: dog_age,
