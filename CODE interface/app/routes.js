@@ -88,7 +88,10 @@ module.exports = function(app, passport) {
       var dogController = require('./controllers/dogController');
       var dogMethods = new dogController();
 
-      dogMethods.getLastPosition(dog_id, function(response){
+      var gpsController = require('./controllers/gpsController');
+      var gpsMethods = new gpsController();
+
+      gpsMethods.getLastPosition(dog_id, function(response){
         var lastPosition = response;
         console.log(lastPosition);
         res.render('track.ejs', {
@@ -100,6 +103,20 @@ module.exports = function(app, passport) {
       });
     });
 
+    app.get('/track/loadTrip/:dog_id', isLoggedIn, function(req, res) {
+      var dog_id = req.params.dog_id;
+      console.log(dog_id);
+
+        var flightPlanCoordinates = [
+          {lat: 37.772, lng: -122.214},
+          {lat: 21.291, lng: -157.821},
+          {lat: -18.142, lng: 178.431},
+          {lat: -27.467, lng: 153.027}
+        ];
+
+        var test = {Name: 'Phil', Coord: flightPlanCoordinates};
+        res.send(test);
+    });
 // =====================================
 // INFO SECTION =================
 // =====================================

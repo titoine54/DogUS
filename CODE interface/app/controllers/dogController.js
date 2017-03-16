@@ -8,30 +8,6 @@ var dogController = function (){
     });
   };
 
-  self.getLastPosition = function (dog_id, callback){
-    var gpsPosition = require('../models/gpsPosition');
-
-    //Find the last position
-    gpsPosition.find({"dogID": dog_id}).sort({"timestamp":-1}).exec(function (err, list_dog_positions) {
-      var lastPosition;
-      if (!_.isUndefined(list_dog_positions[0])) {
-      lastPosition =
-        {
-        latitude: list_dog_positions[0].latitude,
-        longitude: list_dog_positions[0].longitude
-        }
-      } else {
-        lastPosition =
-          {
-          latitude: null,
-          longitude: null
-          }
-      }
-
-      return callback(lastPosition);
-    });
-  };
-
   self.addNewDog = function (req, callback){
     // grab the dog model
     var Dog = require('../models/dog');

@@ -57,6 +57,7 @@
                         </div>
                         <!-- Submit button. Note that its tied to createUser() function from addCtrl. Also note ng-disabled logic which prevents early submits.  -->
                         <button class="btn btn-danger btn-block" onclick="myMap()">Test</button>
+                        <button class="btn btn-danger btn-block" onclick="viewTrip()">View Trip!</button>
                 </div>
             </div>
         </div>
@@ -64,6 +65,13 @@
 
   </div>
 
+    <script>
+    function viewTrip() {
+      $.get("/track/loadTrip/<%= dog_id %>", function(data, status){
+          alert("Data: " + data + "\nStatus: " + status);
+      });
+    }
+    </script>
 
   	<script>
 		function myMap() {
