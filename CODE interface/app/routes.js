@@ -117,6 +117,18 @@ module.exports = function(app, passport) {
         var test = {Name: 'Phil', Coord: flightPlanCoordinates};
         res.send(test);
     });
+
+    app.post('/track/addGpsPosition/:dog_id', function(req, res){
+      var gpsController = require('./controllers/gpsController');
+      var gpsMethods = new gpsController();
+      var data = req.body;
+      var dog_id = req.params.dog_id;
+      var message = "type," + dog_id + "," + data.lat + "," + data.lng + "," + data.timestamp;
+      gpsMethods.addPositionToDB(message, function(response){
+        return;
+      });
+      res.send({status: "success"});
+    });
 // =====================================
 // INFO SECTION =================
 // =====================================

@@ -45,11 +45,16 @@ module.exports = function(passport) {
 
          var re_email = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
          var isEmail = re_email.test(email);
+
          if (!isEmail)
             return done(null, false, req.flash('signupMessage', 'Please enter a valid email adress. (ex: john@domain.com)'));
 
         var re_pass = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])\w{6,}$/;
         var isPass = re_pass.test(password);
+
+        //For developping  mode
+        isPass = true;
+
         if (!isPass)
            return done(null, false, req.flash('signupMessage', 'Password must be at least 6 caracters long, have at least one number, one lowercase and one uppercase letter.'));
 

@@ -56,7 +56,7 @@
                             <input type="text" class="form-control" id="longitude" value=<%= lastPosition.longitude %> ng-model="formData.longitude">
                         </div>
                         <!-- Submit button. Note that its tied to createUser() function from addCtrl. Also note ng-disabled logic which prevents early submits.  -->
-                        <button class="btn btn-danger btn-block" onclick="myMap()">Test</button>
+                        <button class="btn btn-danger btn-block" onclick="addGpsPosition()">Add gps position to DB</button>
                         <button class="btn btn-danger btn-block" onclick="viewTrip()">View Trip!</button>
                 </div>
             </div>
@@ -65,10 +65,23 @@
 
   </div>
 
+  <script>
+  function addGpsPosition() {
+    var latitude = document.getElementById("latitude").value;;
+    var longitude = document.getElementById("longitude").value;
+    var now = Date.now();
+    $.post("/track/addGpsPosition/<%= dog_id %>", {timestamp : now, lat: latitude, lng: longitude}, function(data, status){
+        if (status == "success") {
+            myMap();
+        }
+    });
+  }
+  </script>
+
     <script>
     function viewTrip() {
       $.get("/track/loadTrip/<%= dog_id %>", function(data, status){
-          alert("Data: " + data + "\nStatus: " + status);
+          //alert("Data: " + data + "\nStatus: " + status);
       });
     }
     </script>
