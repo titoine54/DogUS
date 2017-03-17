@@ -6,13 +6,11 @@
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> <!-- load fontawesome -->
 
 </head>
+
 <body>
   <div>
     <% include navbar.ejs %>
     <% include sidebar.ejs %>
-    <script>
-      $( "a[dogid='<%= dog_id %>']" ).trigger( "click" );
-    </script>
 
     <h1>Track your animal with GPS</h1>
 
@@ -30,7 +28,7 @@
 					</div>
 					<!-- Panel Body -->
 					<div class="panel-body">
-						<div id="map" style="width:100%;height:500px"><img src="/img/noMap.jpg" style="width:100%;height:500px"></div>
+						<div id="map" style="width:100%;height:500px"></div>
 					</div>
 				</div>
         </div>
@@ -110,9 +108,7 @@
     				icon: image
   		   });
       } else {
-        var myImage = new Image(100, 200);
-        myImage.src = noMap;
-        map = myImage;
+        document.getElementById('map').innerHTML = '<img src="/img/noMap.jpg" style="width:100%;height:500px"/>';
       }
 		}
 		</script>
