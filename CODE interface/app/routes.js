@@ -240,9 +240,27 @@ module.exports = function(app, passport) {
     // we will want this protected so you have to be logged in to visit
     // we will use route middleware to verify this (the isLoggedIn function)
     app.get('/profile', isLoggedIn, function(req, res) {
+      var collarController = require('./controllers/collarController');
+      var collarMethods = new collarController();
+
+      var users_dog = req.session.users_dog;
+
+      var dog_id_name_array = new Array();
+
+      for (var i = 0, len = users_dog.length; i < len; i++) {
+        dog_id_name_array[users_dog[i]._id] = users_dog[i].name;
+      }
+
+      collarMethods.getUserCollars(req.user.local.email, function(response){
+        var collar_list = response;
+
         res.render('profile.ejs', {
-            user : req.user // get the user out of session and pass to template
+            user : req.user,
+            users_dog : users_dog,
+            users_collar : collar_list,
+            dog_id_name_array: dog_id_name_array
         });
+      });
     });
 
 // =====================================

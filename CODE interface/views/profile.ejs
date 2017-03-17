@@ -5,7 +5,22 @@
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
     <style>
-        body        { padding-top:80px; word-wrap:break-word; }
+        body {
+          padding-top:80px;
+          word-wrap:break-word;
+        }
+        .hr_style {
+          display: block;
+          -webkit-margin-before: 0.5em;
+          -webkit-margin-after: 0.5em;
+          -webkit-margin-start: auto;
+          -webkit-margin-end: auto;
+          border-style: inset;
+          border-width: 1px;
+          background-color: #fff;
+          border-top: 2px dashed #8c8b8b;
+        }
+
     </style>
 </head>
 <body>
@@ -22,15 +37,28 @@
         <!-- LOCAL INFORMATION -->
         <div class="col-sm-6">
             <div class="well">
-                <h3><span class="fa fa-user"></span> Local</h3>
+                <h2><span class="fa fa-user"></span> User</h2>
                     <p>
-                        <strong>id</strong>: <%= user._id %><br>
-                        <strong>email</strong>: <%= user.local.email %><br>
-                        <strong>password</strong>: <%= user.local.password %>
+                        <strong>Email</strong>: <%= user.local.email %>
+                        <br>
                     </p>
             </div>
         </div>
-
+        <div class="col-sm-6">
+            <div class="well">
+                <h2><img src="img/logo.png" alt="DogUS logo" width="45px"></span> Collars</h2>
+                <% for(var i=0; i < users_collar.length; i++) { %>
+                  <hr class="hr_style">
+                  <h3> <%= dog_id_name_array[users_collar[i].dog_id] %> </h3>
+                  <p>
+                      <strong>Collar ID: </strong>: <%= users_collar[i].mac_address %>
+                      <br>
+                      <strong>Dog ID: </strong>: <%= users_collar[i].dog_id %>
+                      <br>
+                  </p>
+                <% } %>
+            </div>
+        </div>
     </div>
 
 </div>
