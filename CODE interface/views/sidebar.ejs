@@ -10,10 +10,21 @@
       <ul>
         <li><a href="/track/<%= users_dog[i]._id %>">Track</a></li>
         <li><a href="/infos/<%= users_dog[i]._id %>">Informations</a></li>
-        <li><a href="/calendar/<%= users_dog[i]._id %>">Set Calendar</a></li>
+        <li><a href="/calendar/<%= users_dog[i]._id %>">Calendar</a></li>
   		</ul>
   	</li>
   <% } %>
+
+    <% if(users_dog.length != 0) { %>
+        <li class="dropdown"><a class="" dogid="all" href="#">All</a>
+            <ul>
+                <li><a href="/track/all">Track</a></li>
+        <!--    <li><a href="/infos/all">Informations</a></li>  -->
+                <li><a href="/calendar/all">Calendar</a></li>
+            </ul>
+        </li>
+    <% } %>
+
   <li><a class="" href="/addanimal">Add Animal + </a></li>
 
 </ul>

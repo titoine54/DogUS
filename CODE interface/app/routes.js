@@ -173,6 +173,13 @@ module.exports = function(app, passport) {
               return dog;
           }
       });
+
+      if(!_.isObject(dog)) {
+          dog = {
+              _id : dog_id,
+              name : 'All animals'
+          }
+      }
       //console.log(req.session.users_dog);
       res.render('calendar.ejs', {
           user : req.user, // get the user out of session and pass to template
