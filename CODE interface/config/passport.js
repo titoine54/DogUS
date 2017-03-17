@@ -43,6 +43,16 @@ module.exports = function(passport) {
        // User.findOne wont fire unless data is sent back
        process.nextTick(function() {
 
+         var re_email = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+         var isEmail = re_email.test(email);
+         if (!isEmail)
+            return done(null, false, req.flash('signupMessage', 'Please enter a valid email adress. (ex: john@domain.com)'));
+
+        var re_pass = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])\w{6,}$/;
+        var isPass = re_pass.test(password);
+        if (!isPass)
+           return done(null, false, req.flash('signupMessage', 'Password must be at least 6 caracters long, have at least one number, one lowercase and one uppercase letter.'));
+
        // find a user whose email is the same as the forms email
        // we are checking to see if the user trying to login already exists
        User.findOne({ 'local.email' :  email }, function(err, user) {
@@ -71,6 +81,8 @@ module.exports = function(passport) {
                newUser.local.active   = false;
                newUser.local.verif_url = random_url;
 
+               req.session.email = email;
+
                // save the user
                newUser.save(function(err) {
                    if (err) {
@@ -88,12 +100,13 @@ module.exports = function(passport) {
 
                   var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
 
+                  var html_content = '<html><head><title>DogUS</title><link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> <!-- load bootstrap css --><link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> <!-- load fontawesome --><style>body { padding-top:80px; }</style></head><body><div class="container"><div class="jumbotron text-center"><img src="http://titoine.me/img/logo.png" alt="DogUS logo" width="75px"><h1>DogUS</h1><br/>Please confirm your account by clicking the following link: <a href="'+ fullUrl + '/verification-email/' + random_url + '">Activate my Account</a></div></div></body></html>';
+
                   var mailOptions = {
                     from: 'senderdogus@gmail.com', // sender address
                     to: email,
                     subject: 'Account Verification', // Subject line
-                    text: 'Please confirm your account by clicking the following link: '
-                      + fullUrl + '/verification-email/' + random_url
+                    html: html_content
                   };
 
                   transporter.sendMail(mailOptions, function(error, info){

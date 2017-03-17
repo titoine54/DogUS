@@ -36,7 +36,7 @@ module.exports = function(app, passport) {
 
     // process the signup form
     app.post('/signup', passport.authenticate('local-signup', {
-        successRedirect : '/', // redirect to the secure profile section
+        successRedirect : '/signup/pending-email', // redirect to the secure profile section
         failureRedirect : '/signup', // redirect back to the signup page if there is an error
         failureFlash : true // allow flash messages
     }));
@@ -255,6 +255,17 @@ module.exports = function(app, passport) {
       var verifMethods = new verificationController();
       verifMethods.activateUser(user_url, function(response){
         res.render('verification-email.ejs');
+      });
+    });
+
+// =====================================
+// PENDING EMAIL SECTION =================
+// =====================================
+    app.get('/signup/pending-email', function(req, res) {
+      email = req.session.email;
+
+      res.render('pending-email.ejs', {
+        user_email : email
       });
     });
 

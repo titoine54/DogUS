@@ -12,11 +12,14 @@
 <div class="container">
 
     <div class="jumbotron text-center">
-        <img src="../../img/logo.png" alt="DogUS logo" width="75px">
-        <h1>Email has been confirmed</h1>
-        <h2>Your account is now active, please login.</h1>
+        <span><img src="../../img/logo.png" alt="DogUS logo" width="50px"><h1>DogUS</h1>
+
+        <h2>A confirmation email was sent to :</h2>
         <br/>
-        <a href="/login" class="btn btn-default"><span class="fa fa-user-circle-o"></span> Login</a>
+        <h2><%= user_email %></h2>
+        <br/>
+        <h3>Please follow the link in the email to activate your account</h3>
+        <a href="/" class="btn btn-default"><span class="fa fa-home"></span> Back to home page</a>
     </div>
 
 </div>
