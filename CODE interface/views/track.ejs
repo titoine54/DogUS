@@ -7,7 +7,7 @@
 
 </head>
 
-<body>
+<body onload="setInterval(refresh, 4000)">
   <div>
     <% include navbar.ejs %>
     <% include sidebar.ejs %>
@@ -56,12 +56,32 @@
                         <!-- Submit button. Note that its tied to createUser() function from addCtrl. Also note ng-disabled logic which prevents early submits.  -->
                         <button class="btn btn-danger btn-block" onclick="addGpsPosition()">Add gps position to DB</button>
                         <button class="btn btn-danger btn-block" onclick="viewTrip()">View Trip!</button>
+                        <button class="btn btn-danger btn-block" onclick="refresh()">Refresh</button>
                 </div>
             </div>
         </div>
     </div>
-
   </div>
+
+  <script>
+  function refresh() {
+    $.get("/track/lastPosition/<%= dog_id %>", function(data, status){
+        //alert("Data: " + data + "\nStatus: " + status);
+        if (status == "success") {
+          //alert("Data: " + data.latitude + "   " + data.longitude);
+          var latitude = document.getElementById("latitude").value;
+          var longitude = document.getElementById("longitude").value;
+
+          //alert("Update map! " + longitude + "   " + data.longitude + "  " + latitude + "   " + data.latitude + "  " + (latitude != data.latitude));
+          //if (latitude != data.latitude && longitude != data.longitude) {
+            document.getElementById("latitude").value = data.latitude;
+            document.getElementById("longitude").value = data.longitude;
+            myMap();
+          //}
+        }
+    });
+  }
+  </script>
 
   <script>
   function addGpsPosition() {
@@ -70,7 +90,7 @@
     var now = Date.now();
     $.post("/track/addGpsPosition/<%= dog_id %>", {timestamp : now, lat: latitude, lng: longitude}, function(data, status){
         if (status == "success") {
-            myMap();
+            //myMap();
         }
     });
   }

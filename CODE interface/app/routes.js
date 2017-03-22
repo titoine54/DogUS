@@ -84,10 +84,6 @@ module.exports = function(app, passport) {
 // =====================================
     app.get('/track/:dog_id', isLoggedIn, function(req, res) {
       var dog_id = req.params.dog_id;
-
-      var dogController = require('./controllers/dogController');
-      var dogMethods = new dogController();
-
       var gpsController = require('./controllers/gpsController');
       var gpsMethods = new gpsController();
 
@@ -116,6 +112,18 @@ module.exports = function(app, passport) {
 
         var test = {Name: 'Phil', Coord: flightPlanCoordinates};
         res.send(test);
+    });
+
+    app.get('/track/lastPosition/:dog_id', isLoggedIn, function(req, res) {
+      var dog_id = req.params.dog_id;
+      var gpsController = require('./controllers/gpsController');
+      var gpsMethods = new gpsController();
+
+      gpsMethods.getLastPosition(dog_id, function(response){
+        var lastPosition = response;
+        console.log(lastPosition);
+        res.send(lastPosition);
+      });
     });
 
     app.post('/track/addGpsPosition/:dog_id', function(req, res){
