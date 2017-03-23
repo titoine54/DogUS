@@ -6,35 +6,54 @@ var eventController = function (){
     self.getDogEvents = function (dog_id, callback){
         var Events = require('../models/event');
 
-        Events.find({ dog_id: dog_id },function (err, list_event) {
-            var events = [];
-            _.each(list_event, function(savedEvent) {
-                var currentDay = moment().isoWeekday();
-                var startTime;
-                var endTime;
 
-                if(savedEvent.day >= currentDay) {
-                    startTime = new Date(moment(savedEvent.start_time, 'hh:mm:ss a').add(savedEvent.day - currentDay, 'day').format("YYYY-MM-DD HH:mm"));
-                    endTime = new Date(moment(savedEvent.end_time, 'hh:mm:ss a').add(savedEvent.day - currentDay, 'day').format("YYYY-MM-DD HH:mm"));
-
-                } else if (savedEvent.day < currentDay) {
-                    startTime = new Date(moment(savedEvent.start_time, 'hh:mm:ss a').subtract(currentDay - savedEvent.day, 'day').format("YYYY-MM-DD HH:mm"));
-                    endTime = new Date(moment(savedEvent.end_time, 'hh:mm:ss a').subtract(currentDay - savedEvent.day, 'day').format("YYYY-MM-DD HH:mm"));
+        if(dog_id === 'all') {
+            Events.find(function (err, list_event) {
+                if(err){
+                    console.log("ERROR : " + err);
                 }
 
-                var event = {
-                    id : savedEvent.id,
-                    text: savedEvent.text,
-                    start_date: startTime,
-                    end_date: endTime,
-                    color: savedEvent.color,
-                    dog_id: savedEvent.dog_id
-                };
-                events.push(event);
+                self._prepareEvent(list_event, callback);
             });
+        } else {
+            Events.find({ dog_id: dog_id },function (err, list_event) {
+                if(err){
+                    console.log("ERROR : " + err);
+                }
 
-            callback(events);
+                self._prepareEvent(list_event, callback);
+            });
+        }
+    };
+
+    self._prepareEvent = function (eventList, callback) {
+
+        var events = [];
+        _.each(eventList, function(savedEvent) {
+            var currentDay = moment().isoWeekday();
+            var startTime;
+            var endTime;
+
+            if(savedEvent.day >= currentDay) {
+                startTime = new Date(moment(savedEvent.start_time, 'hh:mm:ss a').add(savedEvent.day - currentDay, 'day').format("YYYY-MM-DD HH:mm"));
+                endTime = new Date(moment(savedEvent.end_time, 'hh:mm:ss a').add(savedEvent.day - currentDay, 'day').format("YYYY-MM-DD HH:mm"));
+
+            } else if (savedEvent.day < currentDay) {
+                startTime = new Date(moment(savedEvent.start_time, 'hh:mm:ss a').subtract(currentDay - savedEvent.day, 'day').format("YYYY-MM-DD HH:mm"));
+                endTime = new Date(moment(savedEvent.end_time, 'hh:mm:ss a').subtract(currentDay - savedEvent.day, 'day').format("YYYY-MM-DD HH:mm"));
+            }
+
+            var event = {
+                id : savedEvent.id,
+                text: savedEvent.text,
+                start_date: startTime,
+                end_date: endTime,
+                color: savedEvent.color,
+                dog_id: savedEvent.dog_id
+            };
+            events.push(event);
         });
+        callback(events);
     };
 
     self.addNewEvent = function (event, dog_id, sid, callback){
