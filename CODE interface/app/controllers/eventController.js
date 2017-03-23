@@ -1,10 +1,12 @@
 const moment = require('moment');
+const async = require('async');
 
 var eventController = function (){
     var self = this;
 
     self.getDogEvents = function (dog_id, callback){
         var Events = require('../models/event');
+        var Dogs = require('../models/dog');
 
 
         if(dog_id === 'all') {
@@ -13,7 +15,27 @@ var eventController = function (){
                     console.log("ERROR : " + err);
                 }
 
-                self._prepareEvent(list_event, callback);
+                self._prepareEvent(list_event, function(events) {
+                    var finalEvents = [];
+
+                    async.each(events, function(event, asynCallback) {
+                        Dogs.findById(event.dog_id ,function (err, dog) {
+                            if(err || _.isEmpty(dog)) {
+                                asynCallback(err);
+                            } else {
+                                event.text = dog.name + ' : ' + event.text;
+                                finalEvents.push(event);
+                                asynCallback();
+                            }
+                        });
+                    }, function(err) {
+                        if( err ) {
+                            console.log('ERROR : ' + err);
+                        } else {
+                            callback(finalEvents);
+                        }
+                    });
+                });
             });
         } else {
             Events.find({ dog_id: dog_id },function (err, list_event) {
