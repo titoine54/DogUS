@@ -16,6 +16,7 @@ var dogController = function (){
     var dog_age = req.body.dog_age;
     var dog_weight = req.body.dog_weight;
     var dog_description = req.body.dog_description;
+    var dog_color = req.body.dog_color;
 
     // create a new dog
     var newDog = Dog({
@@ -23,7 +24,8 @@ var dogController = function (){
       owner_email: req.user.local.email,
       age: dog_age,
       weight: dog_weight,
-      description: dog_description
+      description: dog_description,
+        color: dog_color
     });
 
     // save the dog
@@ -45,6 +47,7 @@ var dogController = function (){
     var dog_age = req.body.dog_age;
     var dog_weight = req.body.dog_weight;
     var dog_description = req.body.dog_description;
+      var dog_color = req.body.dog_color;
 
     var dog_id = req.params.dog_id;
 
@@ -52,7 +55,8 @@ var dogController = function (){
       name: dog_name,
       age: dog_age,
       weight: dog_weight,
-      description: dog_description
+      description: dog_description,
+        color: dog_color
     };
 
     // save the dog

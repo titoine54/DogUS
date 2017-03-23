@@ -9,6 +9,7 @@ var dogSchema = mongoose.Schema({
   age: { type: Number, required: true},
   weight: { type: Number, required: true},
   description: { type: String, required: true},
+    color : {type: String, required: true}
   //img: { data: Buffer, contentType: String }
 });
 

@@ -24,6 +24,7 @@ var eventController = function (){
                                 asynCallback(err);
                             } else {
                                 event.text = dog.name + ' : ' + event.text;
+                                event.color = dog.color;
                                 finalEvents.push(event);
                                 asynCallback();
                             }

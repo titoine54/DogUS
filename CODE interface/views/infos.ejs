@@ -58,13 +58,20 @@
           <input class="form-control" type="text" id="dog_description" name="dog_description" value="<%= selected_dog.description %>" required="true">
         </div>
       </div>
-      
+
       <div class="form-group row">
         <label for="dog_weight" class="col-2 col-form-label">Weight (lbs)</label>
         <div class="col-10">
           <input class="form-control" type="number" id="dog_weight" name="dog_weight" min="5" max="100" value="<%= selected_dog.weight %>" required="true">
         </div>
       </div>
+
+    <div class="form-group row">
+        <label for="dog_weight" class="col-2 col-form-label">Weight (lbs)</label>
+        <div class="col-10">
+            <input class="form-control" type="text" id="dog_color" name="dog_color" min="5" max="100" value="<%= selected_dog.color %>" required="true">
+        </div>
+    </div>
 
       <input type="submit" name="type" value="Save" class="save_button btn btn-primary">
       <input type="submit" name="type" value="Delete" class="delete_button btn btn-danger">
