@@ -12,13 +12,13 @@ var gpsController = function (){
         {
         latitude: list_dog_positions[0].latitude,
         longitude: list_dog_positions[0].longitude
-        }
+        };
       } else {
         lastPosition =
           {
           latitude: null,
           longitude: null
-          }
+        };
       }
 
       return callback(lastPosition);

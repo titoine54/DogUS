@@ -7,7 +7,7 @@
 
 </head>
 
-<body onload="setInterval(refresh, 4000)">
+<body onload="init()">
   <div>
     <% include navbar.ejs %>
     <% include sidebar.ejs %>
@@ -56,84 +56,95 @@
                         <!-- Submit button. Note that its tied to createUser() function from addCtrl. Also note ng-disabled logic which prevents early submits.  -->
                         <button class="btn btn-danger btn-block" onclick="addGpsPosition()">Add gps position to DB</button>
                         <button class="btn btn-danger btn-block" onclick="viewTrip()">View Trip!</button>
-                        <button class="btn btn-danger btn-block" onclick="refresh()">Refresh</button>
+                        <button class="btn btn-danger btn-block" onclick="refreshMarker()">Refresh</button>
                 </div>
             </div>
         </div>
     </div>
   </div>
 
+
+
   <script>
-  function refresh() {
+
+  var map;
+  var marker;
+  var dogImage = '/img/dogMarker2.png';
+  var noMap = '/img/noMap.jpg';
+
+  function init() {
+    initMap();
+    setInterval(refreshMarker, 5000);
+  }
+
+  function refreshMarker() {
     $.get("/track/lastPosition/<%= dog_id %>", function(data, status){
-        //alert("Data: " + data + "\nStatus: " + status);
         if (status == "success") {
-          //alert("Data: " + data.latitude + "   " + data.longitude);
           var latitude = document.getElementById("latitude").value;
           var longitude = document.getElementById("longitude").value;
 
-          //alert("Update map! " + longitude + "   " + data.longitude + "  " + latitude + "   " + data.latitude + "  " + (latitude != data.latitude));
-          //if (latitude != data.latitude && longitude != data.longitude) {
+          if (latitude != data.latitude || longitude != data.longitud) {
             document.getElementById("latitude").value = data.latitude;
             document.getElementById("longitude").value = data.longitude;
-            myMap();
-          //}
+
+            var myLatLng = new google.maps.LatLng(data.latitude, data.longitude);
+
+            marker.setMap(null);
+            marker = new google.maps.Marker({
+              position: myLatLng,
+              map: map,
+              title:"Hello World!",
+              icon: dogImage
+            });
+
+            marker.setMap(map);
+          }
         }
     });
   }
-  </script>
 
-  <script>
   function addGpsPosition() {
     var latitude = document.getElementById("latitude").value;;
     var longitude = document.getElementById("longitude").value;
     var now = Date.now();
     $.post("/track/addGpsPosition/<%= dog_id %>", {timestamp : now, lat: latitude, lng: longitude}, function(data, status){
-        if (status == "success") {
-            //myMap();
-        }
     });
   }
-  </script>
 
-    <script>
     function viewTrip() {
       $.get("/track/loadTrip/<%= dog_id %>", function(data, status){
           //alert("Data: " + data + "\nStatus: " + status);
       });
     }
-    </script>
 
-  	<script>
-		function myMap() {
-			var image = '/img/dogMarker2.png';
-      var noMap = '/img/noMap.jpg';
+    function initMap() {
       var latitude = document.getElementById("latitude").value;
       var longitude = document.getElementById("longitude").value;
-      var map;
 
       if (latitude & longitude) {
-			  var myLatLng = new google.maps.LatLng(latitude, longitude);
-			  var mapCanvas = document.getElementById("map");
-			  var mapOptions = {
-				center: myLatLng, zoom: 15
-			  };
+        var myLatLng = new google.maps.LatLng(latitude, longitude);
+        var mapCanvas = document.getElementById("map");
+        var mapOptions = {
+        center: myLatLng, zoom: 15
+        };
 
-	       map = new google.maps.Map(mapCanvas, mapOptions);
+         map = new google.maps.Map(mapCanvas, mapOptions);
 
-  			 var marker = new google.maps.Marker({
-    				position: myLatLng,
-    				map: map,
-    				title: 'The Dog Name!',
-    				icon: image
-  		   });
+         marker = new google.maps.Marker({
+            position: myLatLng,
+            title: 'The Dog Name!',
+            icon: dogImage
+         });
+         marker.setMap(map);
       } else {
         document.getElementById('map').innerHTML = '<img src="/img/noMap.jpg" style="width:100%;height:500px"/>';
       }
-		}
-		</script>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiJeySB5_JKsubA2Hk8QQgZlfp85kvAhg&callback=myMap" async defer></script>
+    }
+
+		</script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiJeySB5_JKsubA2Hk8QQgZlfp85kvAhg"></script>
+
 
 </body>
 </html>
