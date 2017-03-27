@@ -175,25 +175,17 @@ module.exports = function(app, passport) {
 // CALENDAR SECTION =================
 // =====================================
     app.get('/calendar/:dog_id', isLoggedIn, function(req, res) {
+        var calendarController = require('./controllers/calendarController');
       var dog_id = req.params.dog_id;
-      var dog = req.session.users_dog.find(function(dog){
-          if(dog._id === dog_id) {
-              return dog;
-          }
-      });
 
-      if(!_.isObject(dog)) {
-          dog = {
-              _id : dog_id,
-              name : 'All animals'
-          }
-      }
-      //console.log(req.session.users_dog);
-      res.render('calendar.ejs', {
-          user : req.user, // get the user out of session and pass to template
-          users_dog : req.session.users_dog,
-          dog : dog,
-          dog_id : dog_id
+      calendarMethods = new calendarController();
+      calendarMethods.getDogById(req.session.users_dog, req.params.dog_id, function(dog) {
+          res.render('calendar.ejs', {
+              user : req.user, // get the user out of session and pass to template
+              users_dog : req.session.users_dog,
+              dog : dog,
+              dog_id : dog_id
+          });
       });
     });
 
