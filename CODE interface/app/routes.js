@@ -238,11 +238,11 @@ module.exports = function(app, passport) {
         console.log('INFO - event : [' + sid + '] will be ' + mode);
         //run db operation
         if (mode == "updated") {
-            eventMethods.updateEvents(data, sid, update_response);
+            eventMethods.updateEvents(data, sid, req.user.local.email, update_response);
         }
 
         else if (mode == "inserted") {
-            eventMethods.addNewEvent(data, req.query.dog_id, sid, update_response);
+            eventMethods.addNewEvent(data, req.query.dog_id, sid, req.user.local.email, update_response);
         }
 
         else if (mode == "deleted") {
@@ -259,7 +259,7 @@ module.exports = function(app, passport) {
         var eventController = require('./controllers/eventController');
         var eventMethods = new eventController();
 
-        eventMethods.getDogEvents(req.query.dog_id, function(data){
+        eventMethods.getDogEvents(req.query.dog_id, req.user.local.email, function(data){
             //output response
             res.send(data);
         });

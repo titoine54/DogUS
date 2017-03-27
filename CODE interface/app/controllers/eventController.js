@@ -4,13 +4,13 @@ const async = require('async');
 var eventController = function (){
     var self = this;
 
-    self.getDogEvents = function (dog_id, callback){
+    self.getDogEvents = function (dog_id, email, callback){
         var Events = require('../models/event');
         var Dogs = require('../models/dog');
 
 
         if(dog_id === 'all') {
-            Events.find(function (err, list_event) {
+            Events.find({user_email: email}, function (err, list_event) {
                 if(err){
                     console.log("ERROR : " + err);
                 }
@@ -85,7 +85,7 @@ var eventController = function (){
         callback(events);
     };
 
-    self.addNewEvent = function (event, dog_id, sid, callback){
+    self.addNewEvent = function (event, dog_id, sid, email, callback){
         // grab the dog model
         var Event = require('../models/event');
         var day = moment(event.start_date).isoWeekday();
@@ -100,7 +100,8 @@ var eventController = function (){
             end_time: endTime,
             color: event.color,
             dog_id: dog_id,
-            id: sid
+            id: sid,
+            user_email: email
         });
 
         // save the dog
@@ -121,7 +122,8 @@ var eventController = function (){
             end_time: endTime,
             color: newData.color,
             dog_id: newData.dog_id,
-            id: event_id
+            id: event_id,
+            user_email: newData.user_email
         };
 
         Event.findOneAndUpdate({id: event_id}, event, callback);
