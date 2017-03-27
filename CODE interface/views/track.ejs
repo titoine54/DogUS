@@ -57,6 +57,7 @@
                         <button class="btn btn-danger btn-block" onclick="addGpsPosition()">Add gps position to DB</button>
                         <button class="btn btn-danger btn-block" onclick="viewTrip()">View Trip!</button>
                         <button class="btn btn-danger btn-block" onclick="refreshMarker()">Refresh</button>
+                        <button class="btn btn-danger btn-block" onclick="drawOnMap()">Edit zone</button>
                 </div>
             </div>
         </div>
@@ -71,10 +72,20 @@
   var marker;
   var dogImage = '/img/dogMarker2.png';
   var noMap = '/img/noMap.jpg';
+  var editMode;
+  var drawingManager;
 
   function init() {
+    editMode = false;
     initMap();
     setInterval(refreshMarker, 5000);
+  }
+
+  function drawOnMap() {
+    editMode = !editMode;
+    drawingManager.setOptions({
+      drawingControl: editMode
+    });
   }
 
   function refreshMarker() {
@@ -136,6 +147,26 @@
             icon: dogImage
          });
          marker.setMap(map);
+
+         drawingManager = new google.maps.drawing.DrawingManager({
+         drawingMode: google.maps.drawing.OverlayType.MARKER,
+         drawingControl: editMode,
+         drawingControlOptions: {
+           position: google.maps.ControlPosition.TOP_CENTER,
+           drawingModes: [
+             google.maps.drawing.OverlayType.CIRCLE,
+             google.maps.drawing.OverlayType.RECTANGLE
+           ]
+         },
+         circleOptions: {
+           editable: true
+         },
+         rectangleOptions: {
+           editable: true
+         }
+       });
+       drawingManager.setMap(map);
+
       } else {
         document.getElementById('map').innerHTML = '<img src="/img/noMap.jpg" style="width:100%;height:500px"/>';
       }
@@ -143,7 +174,7 @@
     }
 
 		</script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiJeySB5_JKsubA2Hk8QQgZlfp85kvAhg"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDiJeySB5_JKsubA2Hk8QQgZlfp85kvAhg&libraries=drawing"></script>
 
 
 </body>
