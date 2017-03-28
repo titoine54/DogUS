@@ -19,6 +19,12 @@ var eventController = function (){
                     var finalEvents = [];
 
                     async.each(events, function(event, asynCallback) {
+                        if(event.dog_id === "all") {
+                            event.text = 'All animals : ' + event.text;
+                            finalEvents.push(event);
+                            asynCallback();
+                            return;
+                        }
                         Dogs.findById(event.dog_id ,function (err, dog) {
                             if(err || _.isEmpty(dog)) {
                                 asynCallback(err);
