@@ -56,6 +56,25 @@ var gpsController = function (){
       return callback();
     });
   };
+
+  self.addZoneToDB = function (dog_id, data, callback){
+    var gpsZone = require('../models/gpsZone');
+
+    var newGpsZone = gpsZone({
+      dog_id: dog_id,
+      center: JSON.parse(data.center),
+      radius: data.radius
+    });
+
+    newGpsZone.save(function(err) {
+      if (err) {
+        console.log('ERROR : ' + err); // todo : Integrate logger for info, warn and error..
+      }
+
+      console.log('Added new dog zone to DB');
+      return callback();
+    });
+  }
 };
 
 module.exports = gpsController;

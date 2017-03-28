@@ -74,11 +74,12 @@
   var noMap = '/img/noMap.jpg';
   var editMode;
   var drawingManager;
+  var circle;
 
   function init() {
     editMode = false;
     initMap();
-    setInterval(refreshMarker, 5000);
+    //setInterval(refreshMarker, 5000);
   }
 
   function drawOnMap() {
@@ -94,10 +95,10 @@
           var latitude = document.getElementById("latitude").value;
           var longitude = document.getElementById("longitude").value;
 
-          if (latitude != data.latitude || longitude != data.longitud) {
+          if (latitude != data.latitude || longitude != data.longitude) {
             document.getElementById("latitude").value = data.latitude;
             document.getElementById("longitude").value = data.longitude;
-
+            alert("Update marker!");
             var myLatLng = new google.maps.LatLng(data.latitude, data.longitude);
 
             marker.setMap(null);
@@ -149,28 +150,30 @@
          marker.setMap(map);
 
          drawingManager = new google.maps.drawing.DrawingManager({
-         drawingMode: google.maps.drawing.OverlayType.MARKER,
          drawingControl: editMode,
          drawingControlOptions: {
            position: google.maps.ControlPosition.TOP_CENTER,
            drawingModes: [
-             google.maps.drawing.OverlayType.CIRCLE,
-             google.maps.drawing.OverlayType.RECTANGLE
+             google.maps.drawing.OverlayType.CIRCLE
            ]
          },
          circleOptions: {
            editable: true
-         },
-         rectangleOptions: {
-           editable: true
          }
        });
        drawingManager.setMap(map);
+       google.maps.event.addListener(drawingManager, 'circlecomplete', onShapeComplete);
 
       } else {
         document.getElementById('map').innerHTML = '<img src="/img/noMap.jpg" style="width:100%;height:500px"/>';
       }
 
+    }
+
+    function onShapeComplete(shape) {
+      //alert(shape);
+      $.post("/track/addGpsZone/<%= dog_id %>", {center : JSON.stringify(shape.center), radius : shape.radius},function(data, status){
+        });
     }
 
 		</script>

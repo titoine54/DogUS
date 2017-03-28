@@ -137,6 +137,18 @@ module.exports = function(app, passport) {
       });
       res.send({status: "success"});
     });
+
+    app.post('/track/addGpsZone/:dog_id', function(req, res){
+      var gpsController = require('./controllers/gpsController');
+      var gpsMethods = new gpsController();
+      var data = req.body;
+      var dog_id = req.params.dog_id;
+      console.log(data);
+      gpsMethods.addZoneToDB(dog_id, data, function(response){
+        return;
+      });
+      res.send({status: "success"});
+    });
 // =====================================
 // INFO SECTION =================
 // =====================================
