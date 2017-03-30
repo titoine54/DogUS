@@ -28,7 +28,7 @@ var gpsController = function (){
   self.addPositionToDB = function (message, callback){
     // splitting the message
 
-    var [type, gps_collar_id, gps_latitude, gps_longitude, gps_timestamp] = message.split(',');
+    var [start, type, gps_collar_id, gps_latitude, gps_longitude, gps_timestamp] = message.split(',');
 
     // grab the GPS model
     var gpsPosition = require('../models/gpsPosition');
