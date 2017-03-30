@@ -84,17 +84,30 @@ module.exports = function(app, passport) {
 // =====================================
     app.get('/track/:dog_id', isLoggedIn, function(req, res) {
       var dog_id = req.params.dog_id;
-      var gpsController = require('./controllers/gpsController');
-      var gpsMethods = new gpsController();
+      var selected_dog = req.session.users_dog.find(o => o._id === dog_id);
 
-      gpsMethods.getLastPosition(dog_id, function(response){
-        var lastPosition = response;
-        console.log(lastPosition);
-        res.render('track.ejs', {
-            user : req.user, // get the user out of session and pass to template
-            users_dog : req.session.users_dog,
-            dog_id : dog_id,
-            lastPosition: lastPosition
+      var dogController = require('./controllers/dogController');
+      var dogMethods = new dogController();
+      var collar_id;
+
+      dogMethods.getCollarID(dog_id, function(response){
+        collar_id = response;
+        req.session.collar_id = collar_id;
+
+        var gpsController = require('./controllers/gpsController');
+        var gpsMethods = new gpsController();
+
+        gpsMethods.getLastPosition(req.session.collar_id, function(response){
+          var lastPosition = response;
+          console.log(lastPosition);
+          return res.render('track.ejs', {
+              user : req.user, // get the user out of session and pass to template
+              users_dog : req.session.users_dog,
+              dog_id : dog_id,
+              collar_id : collar_id,
+              lastPosition: lastPosition,
+              selected_dog : selected_dog
+          });
         });
       });
     });
@@ -116,10 +129,11 @@ module.exports = function(app, passport) {
 
     app.get('/track/lastPosition/:dog_id', isLoggedIn, function(req, res) {
       var dog_id = req.params.dog_id;
+
       var gpsController = require('./controllers/gpsController');
       var gpsMethods = new gpsController();
 
-      gpsMethods.getLastPosition(dog_id, function(response){
+      gpsMethods.getLastPosition(req.session.collar_id, function(response){
         var lastPosition = response;
         console.log(lastPosition);
         res.send(lastPosition);
@@ -130,8 +144,8 @@ module.exports = function(app, passport) {
       var gpsController = require('./controllers/gpsController');
       var gpsMethods = new gpsController();
       var data = req.body;
-      var dog_id = req.params.dog_id;
-      var message = "type," + dog_id + "," + data.lat + "," + data.lng + "," + data.timestamp;
+      var collar_id = req.session.collar_id;
+      var message = "type," + collar_id + "," + data.lat + "," + data.lng + "," + data.timestamp;
       gpsMethods.addPositionToDB(message, function(response){
         return;
       });
@@ -142,9 +156,9 @@ module.exports = function(app, passport) {
       var gpsController = require('./controllers/gpsController');
       var gpsMethods = new gpsController();
       var data = req.body;
-      var dog_id = req.params.dog_id;
+      var collar_id = req.session.collar_id;
       console.log(data);
-      gpsMethods.addZoneToDB(dog_id, data, function(response){
+      gpsMethods.addZoneToDB(collar_id, data, function(response){
         return;
       });
       res.send({status: "success"});

@@ -1,6 +1,20 @@
 var dogController = function (){
   var self = this;
 
+  self.getCollarID = function(dog_id, callback){
+    var Dogs = require('../models/dog');
+
+    if(dog_id === 'all') {
+      // code for all dogs
+      return callback(1234);
+    } else {
+      Dogs.find({ _id: dog_id }, function (err, dog) {
+        console.log(dog[0].collar_id);
+        return callback(dog[0].collar_id);
+      });
+    }
+  };
+
   self.getUserDogs = function (user_email, callback){
     var Dogs = require('../models/dog');
     Dogs.find({ owner_email: user_email },function (err, list_dog) {
@@ -17,7 +31,7 @@ var dogController = function (){
     var dog_weight = req.body.dog_weight;
     var dog_description = req.body.dog_description;
     var dog_color = req.body.dog_color;
-
+    var dog_collar_id = req.body.dog_collar_id;
     // create a new dog
     var newDog = Dog({
       name: dog_name,
@@ -25,7 +39,8 @@ var dogController = function (){
       age: dog_age,
       weight: dog_weight,
       description: dog_description,
-        color: dog_color
+      color: dog_color,
+      collar_id: dog_collar_id
     });
 
     // save the dog
@@ -47,7 +62,8 @@ var dogController = function (){
     var dog_age = req.body.dog_age;
     var dog_weight = req.body.dog_weight;
     var dog_description = req.body.dog_description;
-      var dog_color = req.body.dog_color;
+    var dog_color = req.body.dog_color;
+    var dog_collar_id = req.body.dog_collar_id;
 
     var dog_id = req.params.dog_id;
 
@@ -56,7 +72,8 @@ var dogController = function (){
       age: dog_age,
       weight: dog_weight,
       description: dog_description,
-        color: dog_color
+      color: dog_color,
+      collar_id: dog_collar_id
     };
 
     // save the dog

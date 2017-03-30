@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 
 // define the schema for our gps positions model
 var gpsPositionSchema = mongoose.Schema({
-  dogID: { type: String, required: true},
+  collar_id: { type: String, required: true},
   timestamp: { type: Date, required: true},
   latitude: { type: Number, required: true},
   longitude: { type: Number, required: true}

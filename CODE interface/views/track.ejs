@@ -12,9 +12,12 @@
     <% include navbar.ejs %>
     <% include sidebar.ejs %>
 
+    <script>
+      $( "a[dogid='<%= dog_id %>']" ).trigger( "click" );
+    </script>
+
     <h1>Track your animal with GPS</h1>
 
-      <%= dog_id %>
 
     <!-- Map and Side Panel -->
     <div class="row content" style="margin-left: 0px; margin-right: 0px;">

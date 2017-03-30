@@ -1,11 +1,11 @@
 var gpsController = function (){
   var self = this;
 
-  self.getLastPosition = function (dog_id, callback){
+  self.getLastPosition = function (collar_id, callback){
     var gpsPosition = require('../models/gpsPosition');
 
     //Find the last position
-    gpsPosition.find({"dogID": dog_id}).sort({"timestamp":-1}).exec(function (err, list_dog_positions) {
+    gpsPosition.find({"collar_id": collar_id}).sort({"timestamp":-1}).exec(function (err, list_dog_positions) {
       var lastPosition;
       if (!_.isUndefined(list_dog_positions[0])) {
       lastPosition =
@@ -28,25 +28,18 @@ var gpsController = function (){
   self.addPositionToDB = function (message, callback){
     // splitting the message
 
-    var [type, gps_dogID, gps_latitude, gps_longitude, gps_timestamp] = message.split(',');
+    var [type, gps_collar_id, gps_latitude, gps_longitude, gps_timestamp] = message.split(',');
 
     // grab the GPS model
     var gpsPosition = require('../models/gpsPosition');
 
-    // var gps_dogID = '58a5304c5952a53636f9b8ed';
-    // var gps_timestamp = Date.now();
-    // var gps_latitude = 45;
-    // var gps_longitude = 45;
-
-    // create a new dog
     var newgpsPosition = gpsPosition({
-      dogID: gps_dogID,
+      collar_id: gps_collar_id,
       timestamp: gps_timestamp,
       latitude: gps_latitude,
       longitude: gps_longitude
     });
 
-    // save the dog
     newgpsPosition.save(function(err) {
       if (err) {
         console.log('ERROR : ' + err); // todo : Integrate logger for info, warn and error..
@@ -57,11 +50,11 @@ var gpsController = function (){
     });
   };
 
-  self.addZoneToDB = function (dog_id, data, callback){
+  self.addZoneToDB = function (collar_id, data, callback){
     var gpsZone = require('../models/gpsZone');
 
     var newGpsZone = gpsZone({
-      dog_id: dog_id,
+      collar_id: collar_id,
       center: JSON.parse(data.center),
       radius: data.radius
     });

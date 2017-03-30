@@ -9,7 +9,6 @@ var verificationController = function (){
       "local.active": true
     };
 
-    // save the dog
     User.findOneAndUpdate({ "local.verif_url": user_url }, activate, function(err) {
       if (err) {
         console.log('ERROR : ' + err); // todo : Integrate logger for info, warn and error..

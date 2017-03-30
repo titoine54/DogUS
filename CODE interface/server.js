@@ -59,9 +59,25 @@ wss.on('connection', function connection(ws) {
     var gpsController = require('./app/controllers/gpsController');
     var gpsMethods = new gpsController();
 
-    gpsMethods.addPositionToDB(message, function(response){
-      return;
-    });
+    var [start, type, dog_id] = message.split(',', 3);
+
+    if (start == '$'){
+      switch (type){
+        case 'G' :
+          gpsMethods.addPositionToDB(message, function(response){
+            return;
+          });
+          break;
+
+        case 'U' :
+          console.log("Unlock door for dog", dog_id);
+          break;
+
+        case 'L' :
+          console.log("Lock door for", dog_id);
+          break;
+      }
+    }
 
     ws.send('This is the response !!!');
     console.log('Received: %s', message);
