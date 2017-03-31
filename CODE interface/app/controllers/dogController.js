@@ -30,7 +30,7 @@ var dogController = function (){
     var dog_age = req.body.dog_age;
     var dog_weight = req.body.dog_weight;
     var dog_description = req.body.dog_description;
-    var dog_color = req.body.dog_color;
+    var dog_color = '#' + req.body.dog_color;
     var dog_collar_id = req.body.dog_collar_id;
     // create a new dog
     var newDog = Dog({
@@ -62,7 +62,7 @@ var dogController = function (){
     var dog_age = req.body.dog_age;
     var dog_weight = req.body.dog_weight;
     var dog_description = req.body.dog_description;
-    var dog_color = req.body.dog_color;
+    var dog_color = '#' + req.body.dog_color;
     var dog_collar_id = req.body.dog_collar_id;
 
     var dog_id = req.params.dog_id;
