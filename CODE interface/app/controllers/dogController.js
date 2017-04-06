@@ -9,7 +9,9 @@ var dogController = function (){
       return callback(1234);
     } else {
       Dogs.find({ _id: dog_id }, function (err, dog) {
-        console.log(dog[0].collar_id);
+        if (dog[0]) {
+        console.log(dog[0].collar_id);  
+        }
         return callback(dog[0].collar_id);
       });
     }

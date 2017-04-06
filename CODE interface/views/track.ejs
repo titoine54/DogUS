@@ -80,9 +80,13 @@
   var editMode;
   var drawingManager;
   var circle;
+  var latitude;
+  var longitude;
 
   function init() {
     editMode = false;
+    latitude = document.getElementById("latitude").value;
+    longitude = document.getElementById("longitude").value;
     initMap();
     //setInterval(refreshMarker, 5000);
   }
@@ -97,20 +101,22 @@
   function refreshMarker() {
     $.get("/track/lastPosition/<%= dog_id %>", function(data, status){
         if (status == "success") {
-          var latitude = document.getElementById("latitude").value;
-          var longitude = document.getElementById("longitude").value;
-
           if (latitude != data.latitude || longitude != data.longitude) {
             document.getElementById("latitude").value = data.latitude;
             document.getElementById("longitude").value = data.longitude;
-            alert("Update marker!");
+            if (latitude == "null" || _.isNull(longitude)){
+              latitude = document.getElementById("latitude").value;
+              longitude = document.getElementById("longitude").value;
+              initMap();
+            }
+            latitude = document.getElementById("latitude").value;
+            longitude = document.getElementById("longitude").value;
             var myLatLng = new google.maps.LatLng(data.latitude, data.longitude);
 
             marker.setMap(null);
             marker = new google.maps.Marker({
               position: myLatLng,
               map: map,
-              title:"Hello World!",
               icon: dogImage
             });
 
@@ -121,10 +127,10 @@
   }
 
   function addGpsPosition() {
-    var latitude = document.getElementById("latitude").value;;
-    var longitude = document.getElementById("longitude").value;
+    var newLatitude = document.getElementById("latitude").value;;
+    var newLongitude = document.getElementById("longitude").value;
     var now = Date.now();
-    $.post("/track/addGpsPosition/<%= dog_id %>", {timestamp : now, lat: latitude, lng: longitude}, function(data, status){
+    $.post("/track/addGpsPosition/<%= dog_id %>", {timestamp : now, lat: newLatitude, lng: newLongitude}, function(data, status){
     });
   }
 
@@ -135,9 +141,6 @@
     }
 
     function initMap() {
-      var latitude = document.getElementById("latitude").value;
-      var longitude = document.getElementById("longitude").value;
-
       if (latitude & longitude) {
         var myLatLng = new google.maps.LatLng(latitude, longitude);
         var mapCanvas = document.getElementById("map");

@@ -144,6 +144,7 @@ module.exports = function(app, passport) {
       var gpsController = require('./controllers/gpsController');
       var gpsMethods = new gpsController();
       var data = req.body;
+      console.log(data);
       var collar_id = req.session.collar_id;
       var message = "$,type," + collar_id + "," + data.lat + "," + data.lng + "," + data.timestamp;
       gpsMethods.addPositionToDB(message, function(response){
