@@ -22,6 +22,11 @@
     .formAdd {
         max-width: 385px;
     }
+
+    .dhx_cal_event.dog_event div{
+        background-color: <%= dog.color %> !important;
+    }
+
 </style>
 
 <script type="text/javascript" charset="utf-8">
@@ -38,6 +43,10 @@
         dp.init(scheduler);
         dp.setTransactionMode("POST", false);
     }
+
+    scheduler.templates.event_class = function (start, end, event) {
+        return "dog_event";
+    };
 </script>
 
 <body onload="init();">

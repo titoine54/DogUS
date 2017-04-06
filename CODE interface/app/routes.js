@@ -242,9 +242,6 @@ module.exports = function(app, passport) {
                 console.log('INFO - event : [' + sid + '] was successfully ' + mode);
             }
 
-            //else if (mode == "inserted")
-            //tid = data._id;
-
             res.setHeader("Content-Type","text/xml");
             res.send("<data><action type='"+mode+"' sid='"+sid+"' tid='"+tid+"'/></data>");
         }
