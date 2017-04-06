@@ -29,9 +29,7 @@ var eventController = function (){
                         Dogs.findById(event.dog_id ,function (err, dog) {
                             if(!_.isEmpty(dog)) {
                                 event.color = dog.color;
-                            } else if(event.dog_id === "all") {
-                                event.text = 'All animals : ' + event.text;
-                            }
+                            } 
                             finalEvents.push(event);
                             asynCallback();
                         });
@@ -49,8 +47,13 @@ var eventController = function (){
                 if(err){
                     console.log("ERROR : " + err);
                 }
-
-                self._prepareEvent(list_event, callback);
+                Events.find({ dog_id: 'all' },function (err, list_allEvent) {
+                    if(err){
+                        console.log("ERROR : " + err);
+                    }
+                var allEvents = _.union(list_event, list_allEvent);
+                self._prepareEvent(allEvents, callback);
+                });
             });
         }
     };
