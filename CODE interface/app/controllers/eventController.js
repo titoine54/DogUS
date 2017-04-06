@@ -29,7 +29,7 @@ var eventController = function (){
                         Dogs.findById(event.dog_id ,function (err, dog) {
                             if(!_.isEmpty(dog)) {
                                 event.color = dog.color;
-                            } 
+                            }
                             finalEvents.push(event);
                             asynCallback();
                         });
@@ -86,7 +86,8 @@ var eventController = function (){
                 start_date: startTime,
                 end_date: endTime,
                 color: savedEvent.color,
-                dog_id: savedEvent.dog_id
+                dog_id: savedEvent.dog_id,
+                user_email: savedEvent.user_email
             };
             events.push(event);
         });
