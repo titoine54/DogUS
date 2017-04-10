@@ -22,6 +22,14 @@
     .formAdd {
         max-width: 385px;
     }
+
+    .dhx_cal_event.dog_event div{
+        background-color: <%= dog.color %> !important;
+    }
+    .dhx_cal_event.all_event div{
+        background-color: #4286f4 !important;
+    }
+
 </style>
 
 <script type="text/javascript" charset="utf-8">
@@ -38,6 +46,14 @@
         dp.init(scheduler);
         dp.setTransactionMode("POST", false);
     }
+
+    scheduler.templates.event_class = function (start, end, event) {
+        if(event.dog_id === 'all') {
+            return "all_event"
+        } else {
+            return "dog_event";
+        }
+    };
 </script>
 
 <body onload="init();">

@@ -243,9 +243,6 @@ module.exports = function(app, passport) {
                 console.log('INFO - event : [' + sid + '] was successfully ' + mode);
             }
 
-            //else if (mode == "inserted")
-            //tid = data._id;
-
             res.setHeader("Content-Type","text/xml");
             res.send("<data><action type='"+mode+"' sid='"+sid+"' tid='"+tid+"'/></data>");
         }
@@ -253,7 +250,7 @@ module.exports = function(app, passport) {
         console.log('INFO - event : [' + sid + '] will be ' + mode);
         //run db operation
         if (mode == "updated") {
-            eventMethods.updateEvents(data, sid, req.user.local.email, update_response);
+            eventMethods.updateEvents(data, sid, update_response);
         }
 
         else if (mode == "inserted") {

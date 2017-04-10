@@ -56,31 +56,59 @@ const wss = new WebSocket.Server({ port: 8081 });
 
 wss.on('connection', function connection(ws) {
   ws.on('message', function incoming(message) {
-    var gpsController = require('./app/controllers/gpsController');
-    var gpsMethods = new gpsController();
+    console.log('Received: %s', message);
 
-    var [start, type, dog_id] = message.split(',', 3);
+    var [start, type, collar_id] = message.split(',', 3);
 
     if (start == '$'){
       switch (type){
+
         case 'G' :
+          var gpsController = require('./app/controllers/gpsController');
+          var gpsMethods = new gpsController();
           gpsMethods.addPositionToDB(message, function(response){
             return;
           });
-          break;
+        break;
 
         case 'U' :
-          console.log("Unlock door for dog", dog_id);
-          break;
+          console.log("Unlocked door for dog with collar :", collar_id);
+        break;
 
         case 'L' :
-          console.log("Lock door for", dog_id);
-          break;
+          console.log("Locked door for dog with collar :", collar_id);
+        break;
+
+        case 'R' :
+          var sleep = require('sleep-promise');
+          var dogController = require('./app/controllers/dogController');
+          var dogMethods = new dogController();
+
+          dogMethods.getDogId(collar_id, function(dog_id){
+            if (dog_id) {
+              dogMethods.getOwnerEmail(dog_id, function(email){
+
+                var calendarController = require('./app/controllers/calendarController');
+                var calendarMethods = new calendarController();
+
+                var days = [1,2,3,4,5,6,7];
+                days.forEach(function(day) {
+                  sleep(day * 3000).then(function() {
+                    calendarMethods.getCalendar(dog_id, email, day, collar_id, function(response){
+                      if (response.split(',', 5).length == 5){
+                          console.log("Sending events data for dog with collar : ", collar_id);
+                          ws.send(response);
+                      };
+                      return;
+                    });
+                  });
+                });
+              });
+            };
+          });
+        break;
       }
     }
-
-    ws.send('This is the response !!!');
-    console.log('Received: %s', message);
   });
 
   ws.send('Established connection');

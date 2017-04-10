@@ -4,10 +4,15 @@ const async = require('async');
 var eventController = function (){
     var self = this;
 
+    /**
+     * Get all events corresponding on the dog ID.
+     * @param {string} dog_id - Id of the dog.
+     * @param {string} email - Email of the current user.
+     * @param {function} callback
+     */
     self.getDogEvents = function (dog_id, email, callback){
         var Events = require('../models/event');
         var Dogs = require('../models/dog');
-
 
         if(dog_id === 'all') {
             Events.find({user_email: email}, function (err, list_event) {
@@ -19,21 +24,13 @@ var eventController = function (){
                     var finalEvents = [];
 
                     async.each(events, function(event, asynCallback) {
-                        if(event.dog_id === "all") {
-                            event.text = 'All animals : ' + event.text;
+
+                        Dogs.findById(event.dog_id ,function (err, dog) {
+                            if(!_.isEmpty(dog)) {
+                                event.color = dog.color;
+                            }
                             finalEvents.push(event);
                             asynCallback();
-                            return;
-                        }
-                        Dogs.findById(event.dog_id ,function (err, dog) {
-                            if(err || _.isEmpty(dog)) {
-                                asynCallback(err);
-                            } else {
-                                event.text = dog.name + ' : ' + event.text;
-                                event.color = dog.color;
-                                finalEvents.push(event);
-                                asynCallback();
-                            }
                         });
                     }, function(err) {
                         if( err ) {
@@ -49,12 +46,22 @@ var eventController = function (){
                 if(err){
                     console.log("ERROR : " + err);
                 }
-
-                self._prepareEvent(list_event, callback);
+                Events.find({ dog_id: 'all' },function (err, list_allEvent) {
+                    if(err){
+                        console.log("ERROR : " + err);
+                    }
+                var allEvents = _.union(list_event, list_allEvent);
+                self._prepareEvent(allEvents, callback);
+                });
             });
         }
     };
 
+    /**
+     * Change the day and time attribute to a timestamp with the current week.
+     * @param {array} eventList - Array with all events to prepare.
+     * @param {function} callback
+     */
     self._prepareEvent = function (eventList, callback) {
 
         var events = [];
@@ -78,13 +85,22 @@ var eventController = function (){
                 start_date: startTime,
                 end_date: endTime,
                 color: savedEvent.color,
-                dog_id: savedEvent.dog_id
+                dog_id: savedEvent.dog_id,
+                user_email: savedEvent.user_email
             };
             events.push(event);
         });
         callback(events);
     };
 
+    /**
+     * Get all events corresponding on the dog ID.
+     * @param {object} event - Object with all the event info.
+     * @param {string} dog_id - Id of the dog.
+     * @param {string} sid - Id used by the front end to recognize the event.
+     * @param {string} email - Email of the current user.
+     * @param {function} callback
+     */
     self.addNewEvent = function (event, dog_id, sid, email, callback){
         // grab the dog model
         var Event = require('../models/event');
@@ -108,6 +124,12 @@ var eventController = function (){
         newEvent.save(callback);
     };
 
+    /**
+     * Modify a event with the event ID.
+     * @param {object} newData - All new event info.
+     * @param {string} event_id - id of the event to modify.
+     * @param {function} callback
+     */
     self.updateEvents = function (newData, event_id, callback) {
         var Event = require('../models/event');
 
@@ -129,6 +151,11 @@ var eventController = function (){
         Event.findOneAndUpdate({id: event_id}, event, callback);
     };
 
+    /**
+     * Delete an event with his ID.
+     * @param {string} event_id - ID of the event to delete.
+     * @param {function} callback
+     */
     self.deleteEvent = function (event_id, callback){
         // grab the event model
         var Event = require('../models/event');
