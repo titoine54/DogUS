@@ -79,6 +79,12 @@ wss.on('connection', function connection(ws) {
           console.log("Locked door for dog with collar :", collar_id);
         break;
 
+        case 'T' :
+          var epoch_time = (new Date() / 1000) - 14400;
+          ws.send(epoch_time.toFixed());
+          console.log("Sent epoch timestamp to mbed");
+        break;
+
         case 'R' :
           var sleep = require('sleep-promise');
           var dogController = require('./app/controllers/dogController');
