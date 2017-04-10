@@ -72,7 +72,6 @@
 
 
   <script>
-
   var map;
   var marker;
   var dogImage = '/img/dogMarker2.png';
@@ -82,14 +81,26 @@
   var circle;
   var latitude;
   var longitude;
-  var initShape;
+  var savedShape;
 
   function init() {
     editMode = false;
     latitude = document.getElementById("latitude").value;
     longitude = document.getElementById("longitude").value;
     initMap();
+    initShape();
     //setInterval(refreshMarker, 5000);
+  }
+
+  function initShape(){
+    var gpsZone = <%- JSON.stringify(gpsZone) %>;
+    if (gpsZone) {
+      savedShape = new google.maps.Circle({
+        map: map,
+        center: gpsZone.center,
+        radius: gpsZone.radius
+      });
+    }
   }
 
   function drawOnMap() {
@@ -100,7 +111,7 @@
   }
 
   function deleteShape(){
-    initShape.setMap(null);
+    savedShape.setMap(null);
   }
 
   function refreshMarker() {
@@ -185,10 +196,10 @@
 
     function onShapeComplete(shape) {
       //alert(shape);
-      if(initShape){
+      if(savedShape){
         deleteShape();
       }
-      initShape = shape;
+      savedShape = shape;
       $.post("/track/changeGpsZone/<%= dog_id %>", {center : JSON.stringify(shape.center), radius : shape.radius},function(data, status){
         });
     }

@@ -100,13 +100,20 @@ module.exports = function(app, passport) {
         gpsMethods.getLastPosition(req.session.collar_id, function(response){
           var lastPosition = response;
           console.log(lastPosition);
-          return res.render('track.ejs', {
-              user : req.user, // get the user out of session and pass to template
-              users_dog : req.session.users_dog,
-              dog_id : dog_id,
-              collar_id : collar_id,
-              lastPosition: lastPosition,
-              selected_dog : selected_dog
+
+          gpsMethods.getGpsZone(req.session.collar_id, function(response){
+            var gpsZone = response;
+            console.log("gpsZone  " + gpsZone);
+
+            return res.render('track.ejs', {
+                user : req.user, // get the user out of session and pass to template
+                users_dog : req.session.users_dog,
+                dog_id : dog_id,
+                collar_id : collar_id,
+                lastPosition: lastPosition,
+                selected_dog : selected_dog,
+                gpsZone : gpsZone
+            });
           });
         });
       });
@@ -158,7 +165,7 @@ module.exports = function(app, passport) {
       var gpsMethods = new gpsController();
       var data = req.body;
       var collar_id = req.session.collar_id;
-      //console.log(data);
+      console.log(data);
       gpsMethods.changeGpsZone(collar_id, function(response){
 
         gpsMethods.addZoneToDB(collar_id, data, function(response){

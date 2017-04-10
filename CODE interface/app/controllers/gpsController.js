@@ -25,6 +25,22 @@ var gpsController = function (){
     });
   };
 
+  self.getGpsZone = function (collar_id, callback){
+    var gpsZone = require('../models/gpsZone');
+
+    //Find the last position
+    gpsZone.find({"collar_id": collar_id}).exec(function (err, zones) {
+      var theZone;
+      if (!_.isUndefined(zones[0])) {
+      theZone = zones[0];
+      } else {
+        theZone = null;
+      }
+
+      return callback(theZone);
+    });
+  };
+
   self.addPositionToDB = function (message, callback){
     // splitting the message
 
