@@ -58,7 +58,7 @@ wss.on('connection', function connection(ws) {
   ws.on('message', function incoming(message) {
     console.log('Received: %s', message);
 
-    var [start, type, dog_id] = message.split(',', 3);
+    var [start, type, collar_id] = message.split(',', 3);
 
     if (start == '$'){
       switch (type){
@@ -72,36 +72,38 @@ wss.on('connection', function connection(ws) {
         break;
 
         case 'U' :
-          console.log("Unlock door for dog :", dog_id);
+          console.log("Unlocked door for dog with collar :", collar_id);
         break;
 
         case 'L' :
-          console.log("Lock door for :", dog_id);
+          console.log("Locked door for dog with collar :", collar_id);
         break;
 
         case 'R' :
+
           var dogController = require('./app/controllers/dogController');
           var dogMethods = new dogController();
 
-          dogMethods.getOwnerEmail(dog_id, function(email){
+          dogMethods.getDogId(collar_id, function(dog_id){
+            if (dog_id) {
+              dogMethods.getOwnerEmail(dog_id, function(email){
 
-            var calendarController = require('./app/controllers/calendar');
-            var calendarMethods = new calendarController();
+                var calendarController = require('./app/controllers/calendarController');
+                var calendarMethods = new calendarController();
 
-            for (var day = 1; day <=7; day++){
-              calendarMethods.getCalendar(dog_id, email, day, function(response){
-                return response;
+                for (var day = 1; day <=7; day++){
+                  calendarMethods.getCalendar(dog_id, email, day, collar_id, function(response){
+                    console.log("Sending events data for dog with collar : ", collar_id);
+                    ws.send(response);
+                    return response;
+                  });
+                };
               });
             };
           });
-
-
-
         break;
       }
     }
-
-    // ws.send('This is the response !!!');
   });
 
   ws.send('Established connection');

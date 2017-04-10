@@ -9,18 +9,30 @@ var dogController = function (){
       return callback(1234);
     } else {
       Dogs.find({ _id: dog_id }, function (err, dog) {
-        console.log(dog[0].collar_id);
+        //console.log(dog[0].collar_id);
         return callback(dog[0].collar_id);
       });
     }
+  };
+
+  self.getDogId = function(collar_id, callback){
+    var Dogs = require('../models/dog');
+
+    Dogs.find({ collar_id: collar_id }, function (err, dog) {
+      if (typeof dog[0] !== 'undefined') {
+        return callback(dog[0]._id);
+      } else {
+        return callback();
+      }
+
+    });
   };
 
   self.getOwnerEmail = function(dog_id, callback){
     var Dogs = require('../models/dog');
 
     Dogs.find({ _id: dog_id }, function (err, dog) {
-      console.log(dog);
-      return callback(dog);
+      return callback(dog[0].owner_email);
     });
   };
 
