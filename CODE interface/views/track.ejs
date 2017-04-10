@@ -82,6 +82,7 @@
   var circle;
   var latitude;
   var longitude;
+  var initShape;
 
   function init() {
     editMode = false;
@@ -96,6 +97,10 @@
     drawingManager.setOptions({
       drawingControl: editMode
     });
+  }
+
+  function deleteShape(){
+    initShape.setMap(null);
   }
 
   function refreshMarker() {
@@ -180,7 +185,11 @@
 
     function onShapeComplete(shape) {
       //alert(shape);
-      $.post("/track/addGpsZone/<%= dog_id %>", {center : JSON.stringify(shape.center), radius : shape.radius},function(data, status){
+      if(initShape){
+        deleteShape();
+      }
+      initShape = shape;
+      $.post("/track/changeGpsZone/<%= dog_id %>", {center : JSON.stringify(shape.center), radius : shape.radius},function(data, status){
         });
     }
 

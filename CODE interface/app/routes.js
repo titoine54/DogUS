@@ -153,14 +153,18 @@ module.exports = function(app, passport) {
       res.send({status: "success"});
     });
 
-    app.post('/track/addGpsZone/:dog_id', function(req, res){
+    app.post('/track/changeGpsZone/:dog_id', function(req, res){
       var gpsController = require('./controllers/gpsController');
       var gpsMethods = new gpsController();
       var data = req.body;
       var collar_id = req.session.collar_id;
-      console.log(data);
-      gpsMethods.addZoneToDB(collar_id, data, function(response){
-        return;
+      //console.log(data);
+      gpsMethods.changeGpsZone(collar_id, function(response){
+
+        gpsMethods.addZoneToDB(collar_id, data, function(response){
+          return;
+        });
+
       });
       res.send({status: "success"});
     });

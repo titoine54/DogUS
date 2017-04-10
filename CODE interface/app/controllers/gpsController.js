@@ -50,6 +50,12 @@ var gpsController = function (){
     });
   };
 
+  self.changeGpsZone = function (collar_id, callback){
+    var gpsZone = require('../models/gpsZone');
+
+    gpsZone.find({collar_id: collar_id}).remove(callback);
+  }
+
   self.addZoneToDB = function (collar_id, data, callback){
     var gpsZone = require('../models/gpsZone');
 
