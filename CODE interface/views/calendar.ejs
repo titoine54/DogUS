@@ -26,6 +26,9 @@
     .dhx_cal_event.dog_event div{
         background-color: <%= dog.color %> !important;
     }
+    .dhx_cal_event.all_event div{
+        background-color: #4286f4 !important;
+    }
 
 </style>
 
@@ -45,7 +48,11 @@
     }
 
     scheduler.templates.event_class = function (start, end, event) {
-        return "dog_event";
+        if(event.dog_id === 'all') {
+            return "all_event"
+        } else {
+            return "dog_event";
+        }
     };
 </script>
 

@@ -10,7 +10,7 @@
         <a class="" dogid="<%= users_dog[i]._id %>" href="#">
             <div class="circle" style="background-color: <%= users_dog[i].color %>">
             </div>
-                <%= users_dog[i].name %>
+            <%= users_dog[i].name %>
         </a>
       <ul>
         <li><a href="/track/<%= users_dog[i]._id %>">Track</a></li>
@@ -21,7 +21,12 @@
   <% } %>
 
     <% if(users_dog.length != 0) { %>
-        <li class="dropdown"><a class="" dogid="all" href="#">All</a>
+        <li class="dropdown">
+            <a class="" dogid="all" href="#">
+                <div class="circle" style="background-color: #4286f4">
+                </div>
+                All
+            </a>
             <ul>
                 <li><a href="/track/all">Track</a></li>
         <!--    <li><a href="/infos/all">Informations</a></li>  -->
