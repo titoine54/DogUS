@@ -80,7 +80,7 @@ wss.on('connection', function connection(ws) {
         break;
 
         case 'R' :
-
+          var sleep = require('sleep-promise');
           var dogController = require('./app/controllers/dogController');
           var dogMethods = new dogController();
 
@@ -91,13 +91,18 @@ wss.on('connection', function connection(ws) {
                 var calendarController = require('./app/controllers/calendarController');
                 var calendarMethods = new calendarController();
 
-                for (var day = 1; day <=7; day++){
-                  calendarMethods.getCalendar(dog_id, email, day, collar_id, function(response){
-                    console.log("Sending events data for dog with collar : ", collar_id);
-                    ws.send(response);
-                    return response;
+                var days = [1,2,3,4,5,6,7];
+                days.forEach(function(day) {
+                  sleep(day * 3000).then(function() {
+                    calendarMethods.getCalendar(dog_id, email, day, collar_id, function(response){
+                      if (response.split(',', 5).length == 5){
+                          console.log("Sending events data for dog with collar : ", collar_id);
+                          ws.send(response);
+                      };
+                      return;
+                    });
                   });
-                };
+                });
               });
             };
           });
