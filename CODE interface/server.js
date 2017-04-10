@@ -56,31 +56,52 @@ const wss = new WebSocket.Server({ port: 8081 });
 
 wss.on('connection', function connection(ws) {
   ws.on('message', function incoming(message) {
-    var gpsController = require('./app/controllers/gpsController');
-    var gpsMethods = new gpsController();
+    console.log('Received: %s', message);
 
     var [start, type, dog_id] = message.split(',', 3);
 
     if (start == '$'){
       switch (type){
+
         case 'G' :
+          var gpsController = require('./app/controllers/gpsController');
+          var gpsMethods = new gpsController();
           gpsMethods.addPositionToDB(message, function(response){
             return;
           });
-          break;
+        break;
 
         case 'U' :
-          console.log("Unlock door for dog", dog_id);
-          break;
+          console.log("Unlock door for dog :", dog_id);
+        break;
 
         case 'L' :
-          console.log("Lock door for", dog_id);
-          break;
+          console.log("Lock door for :", dog_id);
+        break;
+
+        case 'R' :
+          var dogController = require('./app/controllers/dogController');
+          var dogMethods = new dogController();
+
+          dogMethods.getOwnerEmail(dog_id, function(email){
+
+            var calendarController = require('./app/controllers/calendar');
+            var calendarMethods = new calendarController();
+
+            for (var day = 1; day <=7; day++){
+              calendarMethods.getCalendar(dog_id, email, day, function(response){
+                return response;
+              });
+            };
+          });
+
+
+
+        break;
       }
     }
 
-    ws.send('This is the response !!!');
-    console.log('Received: %s', message);
+    // ws.send('This is the response !!!');
   });
 
   ws.send('Established connection');

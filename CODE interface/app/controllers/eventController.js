@@ -14,7 +14,6 @@ var eventController = function (){
         var Events = require('../models/event');
         var Dogs = require('../models/dog');
 
-
         if(dog_id === 'all') {
             Events.find({user_email: email}, function (err, list_event) {
                 if(err){

@@ -19,6 +19,19 @@ var calendarController = function (){
 
         callback(dog);
     };
+
+    self.getCalendar = function (dog_id, email, day, callback){
+      var Events = require('../models/event');
+
+      Events.find({day: day, $or: [ { dog_id: dog_id } ,{ dog_id: "all", user_email: email } ] } function (err, events) {
+        console.log(events);
+        return callback(events);
+      });
+
+
+//          Events.find({user_email: email}, function (err, list_event) {
+
+    };
 };
 
 module.exports = calendarController;

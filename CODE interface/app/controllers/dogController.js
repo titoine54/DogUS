@@ -15,6 +15,15 @@ var dogController = function (){
     }
   };
 
+  self.getOwnerEmail = function(dog_id, callback){
+    var Dogs = require('../models/dog');
+
+    Dogs.find({ _id: dog_id }, function (err, dog) {
+      console.log(dog);
+      return callback(dog);
+    });
+  };
+
   self.getUserDogs = function (user_email, callback){
     var Dogs = require('../models/dog');
     Dogs.find({ owner_email: user_email },function (err, list_dog) {
