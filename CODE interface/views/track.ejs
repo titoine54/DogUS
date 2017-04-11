@@ -189,7 +189,8 @@
     }
 
     function onShapeComplete(shape) {
-      //alert(shape);
+      drawingManager.setOptions({drawingMode: null});
+
       if(savedShape){
         deleteShape();
       }
