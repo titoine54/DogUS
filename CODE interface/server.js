@@ -102,15 +102,25 @@ wss.on('connection', function connection(ws) {
                 var calendarMethods = new calendarController();
 
                 var days = [1,2,3,4,5,6,7];
+                console.log("Sending events data for dog with collar :", collar_id);
                 days.forEach(function(day) {
                   sleep(day * 3000).then(function() {
                     calendarMethods.getCalendar(dog_id, email, day, collar_id, function(response){
                       if (response.split(',', 5).length == 5){
-                          console.log("Sending events data for dog with collar : ", collar_id);
                           ws.send(response);
                       };
                       return;
                     });
+                  });
+                });
+                var gpsController = require('./app/controllers/gpsController');
+                var gpsMethods = new gpsController();
+
+                gpsMethods.getGpsZone(collar_id, function(zone){
+                  var zone_message = "$,Z," + collar_id + "," + zone.center.lat + "," + zone.center.lng + "," + zone.radius;
+                  sleep(24000).then(function() {
+                    ws.send(zone_message);
+                    console.log("Sending zone data for dog with collar :", collar_id);
                   });
                 });
               });

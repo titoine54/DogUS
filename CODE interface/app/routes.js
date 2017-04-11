@@ -213,7 +213,7 @@ module.exports = function(app, passport) {
 // CALENDAR SECTION =================
 // =====================================
     app.get('/calendar/:dog_id', isLoggedIn, function(req, res) {
-        var calendarController = require('./controllers/calendarController');
+      var calendarController = require('./controllers/calendarController');
       var dog_id = req.params.dog_id;
 
       calendarMethods = new calendarController();
