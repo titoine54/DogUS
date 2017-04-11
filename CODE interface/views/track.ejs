@@ -25,47 +25,28 @@
     <div class="row content" style="margin-left: 0px; margin-right: 0px;">
 
         <!-- Google Map -->
-        <div class="col-md-7" style="margin-left: 255px; position: inherit;">
+        <div class="col-md-10" style="margin-left: 255px; position: inherit;">
 			<div class="panel panel-default">
 					<!-- Panel Title -->
 					<div class="panel-heading">
-						<h2 class="panel-title text-center">Track your animal!</h2>
+						<h2 class="panel-title text-center">Track your animal! <span class="glyphicon glyphicon-map-marker"></h2>
 					</div>
-					<!-- Panel Body -->
+					<!-- Panel MAP -->
 					<div class="panel-body">
 						<div id="map" style="width:100%;height:500px"></div>
 					</div>
+          <!-- Bottom Panel -->
+                  <!-- Panel Body -->
+                  <div class="panel-body">
+                          <button class="btn btn-danger btn-block" onclick="viewTrip()">View Trip!</button>
+                          <button class="btn btn-danger btn-block" onclick="refreshMarker()">Refresh</button>
+                          <button class="btn btn-danger btn-block" onclick="drawOnMap()">Edit zone</button>
+                  </div>
+
 				</div>
         </div>
 
-        <!-- Side Panel -->
-        <div class="col-md-3">
-            <div class="panel panel-default">
-                <!-- Panel Title -->
-                <div class="panel-heading">
-                    <h2 class="panel-title text-center">Positions <span class="glyphicon glyphicon-map-marker"></span></h2>
-                </div>
-                <!-- Panel Body -->
-                <div class="panel-body">
-                    <!-- Creates Form (novalidate disables HTML validation, Angular will control) -->
 
-                        <!-- Text Boxes and Other User Inputs-->
-                        <div class="form-group">
-                            <label for="latitude">Latitude</label>
-                            <input type="text" class="form-control" id="latitude" value=<%= lastPosition.latitude %> ng-model="formData.latitude">
-                        </div>
-                        <div class="form-group">
-                            <label for="longitude">Longitude</label>
-                            <input type="text" class="form-control" id="longitude" value=<%= lastPosition.longitude %> ng-model="formData.longitude">
-                        </div>
-                        <!-- Submit button. Note that its tied to createUser() function from addCtrl. Also note ng-disabled logic which prevents early submits.  -->
-                        <button class="btn btn-danger btn-block" onclick="addGpsPosition()">Add gps position to DB</button>
-                        <button class="btn btn-danger btn-block" onclick="viewTrip()">View Trip!</button>
-                        <button class="btn btn-danger btn-block" onclick="refreshMarker()">Refresh</button>
-                        <button class="btn btn-danger btn-block" onclick="drawOnMap()">Edit zone</button>
-                </div>
-            </div>
-        </div>
     </div>
   </div>
 
@@ -85,8 +66,8 @@
 
   function init() {
     editMode = false;
-    latitude = document.getElementById("latitude").value;
-    longitude = document.getElementById("longitude").value;
+    latitude = <%= lastPosition.latitude %>;
+    longitude = <%= lastPosition.longitude %>;
     initMap();
     initShape();
     //setInterval(refreshMarker, 5000);
@@ -98,8 +79,11 @@
       savedShape = new google.maps.Circle({
         map: map,
         center: gpsZone.center,
-        radius: gpsZone.radius
+        radius: gpsZone.radius,
+          editable: true
       });
+      google.maps.event.addListener(savedShape, 'radius_changed', onRadiusChange);
+      google.maps.event.addListener(savedShape, 'center_changed', onCenterChange);
     }
   }
 
@@ -112,22 +96,25 @@
 
   function deleteShape(){
     savedShape.setMap(null);
+    savedShape = null;
   }
 
   function refreshMarker() {
     $.get("/track/lastPosition/<%= dog_id %>", function(data, status){
         if (status == "success") {
           if (latitude != data.latitude || longitude != data.longitude) {
-            document.getElementById("latitude").value = data.latitude;
-            document.getElementById("longitude").value = data.longitude;
+            // document.getElementById("latitude").value = data.latitude;
+            // document.getElementById("longitude").value = data.longitude;
             if (latitude == "null" || _.isNull(longitude)){
-              latitude = document.getElementById("latitude").value;
-              longitude = document.getElementById("longitude").value;
+              // latitude = document.getElementById("latitude").value;
+              // longitude = document.getElementById("longitude").value;
+              latitude = data.latitude;
+              longitude = data.longitude;
               initMap();
             }
-            latitude = document.getElementById("latitude").value;
-            longitude = document.getElementById("longitude").value;
-            var myLatLng = new google.maps.LatLng(data.latitude, data.longitude);
+            latitude = data.latitude;
+            longitude = data.longitude;
+            var myLatLng = new google.maps.LatLng(latitude, longitude);
 
             marker.setMap(null);
             marker = new google.maps.Marker({
@@ -142,19 +129,19 @@
     });
   }
 
-  function addGpsPosition() {
-    var newLatitude = document.getElementById("latitude").value;;
-    var newLongitude = document.getElementById("longitude").value;
-    var now = Date.now();
-    $.post("/track/addGpsPosition/<%= dog_id %>", {timestamp : now, lat: newLatitude, lng: newLongitude}, function(data, status){
-    });
-  }
-
-    function viewTrip() {
-      $.get("/track/loadTrip/<%= dog_id %>", function(data, status){
-          //alert("Data: " + data + "\nStatus: " + status);
-      });
-    }
+  // function addGpsPosition() {
+  //   var newLatitude = document.getElementById("latitude").value;;
+  //   var newLongitude = document.getElementById("longitude").value;
+  //   var now = Date.now();
+  //   $.post("/track/addGpsPosition/<%= dog_id %>", {timestamp : now, lat: newLatitude, lng: newLongitude}, function(data, status){
+  //   });
+  // }
+  //
+  //   function viewTrip() {
+  //     $.get("/track/loadTrip/<%= dog_id %>", function(data, status){
+  //         //alert("Data: " + data + "\nStatus: " + status);
+  //     });
+  //   }
 
     function initMap() {
       if (latitude & longitude) {
@@ -187,11 +174,18 @@
        });
        drawingManager.setMap(map);
        google.maps.event.addListener(drawingManager, 'circlecomplete', onShapeComplete);
-
       } else {
         document.getElementById('map').innerHTML = '<img src="/img/noMap.jpg" style="width:100%;height:500px"/>';
       }
 
+    }
+
+    function onCenterChange(){
+      sendShapeToDB(savedShape);
+    }
+
+    function onRadiusChange(){
+      sendShapeToDB(savedShape);
     }
 
     function onShapeComplete(shape) {
@@ -200,6 +194,12 @@
         deleteShape();
       }
       savedShape = shape;
+      google.maps.event.addListener(savedShape, 'radius_changed', onRadiusChange);
+      google.maps.event.addListener(savedShape, 'center_changed', onCenterChange);
+      sendShapeToDB(savedShape);
+    }
+
+    function sendShapeToDB(shape){
       $.post("/track/changeGpsZone/<%= dog_id %>", {center : JSON.stringify(shape.center), radius : shape.radius},function(data, status){
         });
     }
