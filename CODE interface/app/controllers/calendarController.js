@@ -28,17 +28,28 @@ var calendarController = function (){
           const moment = require('moment');
 
           var message = "$,C," + collar_id + "," + day;
+          var message_filler = 6 - events.length;
 
-          for (i = 0; i < events.length; ++i) {
+          for (i = 0; i < events.length; i++) {
+            if (i == 6){ break; }
             var tmp_time = moment(events[i].start_time, "hh:mm:ss a").toDate();
-            var time = moment(tmp_time).format("HH.mm");
+            var time = moment(tmp_time).format("H.mm");
             message = message + "," + time;
           }
 
-          for (i = 0; i < events.length; ++i) {
+          for (i = 0; i < message_filler; i++){
+            message = message + ",0";
+          }
+
+          for (i = 0; i < events.length; i++) {
+            if (i == 6){ break; }
             var tmp_time = moment(events[i].end_time, "hh:mm:ss a").toDate();
-            var time = moment(tmp_time).format("HH.mm");
+            var time = moment(tmp_time).format("H.mm");
             message = message + "," + time;
+          }
+
+          for (i = 0; i < message_filler; i++){
+            message = message + ",0";
           }
         }
         return callback(message);

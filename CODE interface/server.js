@@ -80,9 +80,14 @@ wss.on('connection', function connection(ws) {
         break;
 
         case 'T' :
-          var epoch_time = (new Date() / 1000) - 14400;
-          ws.send(epoch_time.toFixed());
-          console.log("Sent epoch timestamp to mbed");
+          var sleep = require('sleep-promise');
+          sleep(2000).then(function() {
+            var epoch_time = (new Date() / 1000) - 14400;
+            var time_message = "$,T," + epoch_time.toFixed();
+            try { ws.send(time_message); }
+            catch (e) { console.log("Error : Client disconected"); }
+            console.log("Sent epoch timestamp to mbed");
+          });
         break;
 
         case 'R' :
@@ -98,16 +103,30 @@ wss.on('connection', function connection(ws) {
                 var calendarMethods = new calendarController();
 
                 var days = [1,2,3,4,5,6,7];
+                console.log("Sending events data for dog with collar :", collar_id);
                 days.forEach(function(day) {
                   sleep(day * 3000).then(function() {
                     calendarMethods.getCalendar(dog_id, email, day, collar_id, function(response){
                       if (response.split(',', 5).length == 5){
-                          console.log("Sending events data for dog with collar : ", collar_id);
-                          ws.send(response);
+                        try { ws.send(response); }
+                        catch (e) { console.log("Error : Client disconected"); }
                       };
                       return;
                     });
                   });
+                });
+                var gpsController = require('./app/controllers/gpsController');
+                var gpsMethods = new gpsController();
+
+                gpsMethods.getGpsZone(collar_id, function(zone){
+                  if (zone){
+                    console.log("Sending zone data for dog with collar :", collar_id);
+                    var zone_message = "$,Z," + collar_id + "," + zone.center.lat.toFixed(6) + "," + zone.center.lng.toFixed(6) + "," + zone.radius.toFixed(6);
+                    sleep(24000).then(function() {
+                      try { ws.send(zone_message); }
+                      catch (e) { console.log("Error : Client disconected"); }
+                    });
+                  }
                 });
               });
             };
