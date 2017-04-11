@@ -83,7 +83,8 @@ wss.on('connection', function connection(ws) {
           var sleep = require('sleep-promise');
           sleep(2000).then(function() {
             var epoch_time = (new Date() / 1000) - 14400;
-            ws.send(epoch_time.toFixed());
+            var time_message = "$,T," + epoch_time.toFixed();
+            ws.send(time_message);
             console.log("Sent epoch timestamp to mbed");
           });
         break;
