@@ -117,11 +117,13 @@ wss.on('connection', function connection(ws) {
                 var gpsMethods = new gpsController();
 
                 gpsMethods.getGpsZone(collar_id, function(zone){
-                  var zone_message = "$,Z," + collar_id + "," + zone.center.lat + "," + zone.center.lng + "," + zone.radius;
-                  sleep(24000).then(function() {
-                    ws.send(zone_message);
-                    console.log("Sending zone data for dog with collar :", collar_id);
-                  });
+                  if (zone){
+                    var zone_message = "$,Z," + collar_id + "," + zone.center.lat.toFixed(6) + "," + zone.center.lng.toFixed(6) + "," + zone.radius.toFixed(6);
+                    sleep(24000).then(function() {
+                      ws.send(zone_message);
+                      console.log("Sending zone data for dog with collar :", collar_id);
+                    });
+                  }
                 });
               });
             };
