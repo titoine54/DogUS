@@ -84,7 +84,8 @@ wss.on('connection', function connection(ws) {
           sleep(2000).then(function() {
             var epoch_time = (new Date() / 1000) - 14400;
             var time_message = "$,T," + epoch_time.toFixed();
-            ws.send(time_message);
+            try { ws.send(time_message); }
+            catch (e) { console.log("Error : Client disconected"); }
             console.log("Sent epoch timestamp to mbed");
           });
         break;
@@ -107,7 +108,8 @@ wss.on('connection', function connection(ws) {
                   sleep(day * 3000).then(function() {
                     calendarMethods.getCalendar(dog_id, email, day, collar_id, function(response){
                       if (response.split(',', 5).length == 5){
-                          ws.send(response);
+                        try { ws.send(response); }
+                        catch (e) { console.log("Error : Client disconected"); }
                       };
                       return;
                     });
@@ -118,10 +120,11 @@ wss.on('connection', function connection(ws) {
 
                 gpsMethods.getGpsZone(collar_id, function(zone){
                   if (zone){
+                    console.log("Sending zone data for dog with collar :", collar_id);
                     var zone_message = "$,Z," + collar_id + "," + zone.center.lat.toFixed(6) + "," + zone.center.lng.toFixed(6) + "," + zone.radius.toFixed(6);
                     sleep(24000).then(function() {
-                      ws.send(zone_message);
-                      console.log("Sending zone data for dog with collar :", collar_id);
+                      try { ws.send(zone_message); }
+                      catch (e) { console.log("Error : Client disconected"); }
                     });
                   }
                 });
