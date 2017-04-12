@@ -49,21 +49,27 @@ var gpsController = function (){
     // grab the GPS model
     var gpsPosition = require('../models/gpsPosition');
 
-    var newgpsPosition = gpsPosition({
-      collar_id: gps_collar_id,
-      timestamp: gps_timestamp,
-      latitude: gps_latitude,
-      longitude: gps_longitude
-    });
+    if (gps_latitude != 0 && gps_longitude != 0){
+      var newgpsPosition = gpsPosition({
+        collar_id: gps_collar_id,
+        timestamp: gps_timestamp,
+        latitude: gps_latitude,
+        longitude: gps_longitude
+      });
 
-    newgpsPosition.save(function(err) {
-      if (err) {
-        console.log('ERROR : ' + err); // todo : Integrate logger for info, warn and error..
-      }
+      newgpsPosition.save(function(err) {
+        if (err) {
+          console.log('ERROR : ' + err); // todo : Integrate logger for info, warn and error..
+        }
 
-      console.log('Added new dog position to DB');
+        console.log('Added new dog position to DB');
+        return callback();
+      });
+    } else {
+      console.log('Did not added position to DB');
       return callback();
-    });
+    }
+
   };
 
   self.changeGpsZone = function (collar_id, callback){
