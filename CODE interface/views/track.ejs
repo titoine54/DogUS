@@ -63,11 +63,19 @@
   var latitude;
   var longitude;
   var savedShape;
+  var dogName;
+  var timestamp;
+  var address;
+  var infowindow;
+  var geocoder;
+  var markerString;
 
   function init() {
     editMode = false;
     latitude = <%= lastPosition.latitude %>;
     longitude = <%= lastPosition.longitude %>;
+    dogName = '<%= selected_dog.name %>';
+    timestamp =  '<%= lastPosition.timestamp %>';
     initMap();
     initShape();
     //setInterval(refreshMarker, 5000);
@@ -124,6 +132,38 @@
             });
 
             marker.setMap(map);
+
+            geocoder.geocode({
+                'latLng': myLatLng
+              }, function (results, status) {
+                if (status === google.maps.GeocoderStatus.OK) {
+                  if (results[1]) {
+                    address = results[1].formatted_address;
+                    markerString = '<div id="content">'+
+                       '<div id="siteNotice">'+
+                       '</div>'+
+                       '<div id="bodyContent">'+
+                       '<p><b>' + dogName + '</b></p>'+
+                       '<p>Adress: ' + address + '<br>' +
+                       'Last GPS update: ' + timestamp + '</p>'+
+                       '</div>'+
+                       '</div>';
+
+                   infowindow = new google.maps.InfoWindow({
+                     content: markerString
+                   });
+                   marker.addListener('click', function() {
+                     infowindow.open(map, marker);
+                   });
+
+                  } else {
+                    console.log('No results found');
+                  }
+                } else {
+                  console.log('Geocoder failed due to: ' + status);
+                }
+              });
+
           }
         }
     });
@@ -145,6 +185,7 @@
 
     function initMap() {
       if (latitude & longitude) {
+        geocoder = new google.maps.Geocoder();
         var myLatLng = new google.maps.LatLng(latitude, longitude);
         var mapCanvas = document.getElementById("map");
         var mapOptions = {
@@ -159,6 +200,38 @@
             icon: dogImage
          });
          marker.setMap(map);
+
+        geocoder.geocode({
+            'latLng': myLatLng
+          }, function (results, status) {
+            if (status === google.maps.GeocoderStatus.OK) {
+              if (results[1]) {
+                address = results[1].formatted_address;
+                markerString = '<div id="content">'+
+                   '<div id="siteNotice">'+
+                   '</div>'+
+                   '<div id="bodyContent">'+
+                   '<p><b>' + dogName + '</b></p>'+
+                   '<p>Adress: ' + address + '<br>' +
+                   'Last GPS update: ' + timestamp + '</p>'+
+                   '</div>'+
+                   '</div>';
+
+               infowindow = new google.maps.InfoWindow({
+                 content: markerString
+               });
+               marker.addListener('click', function() {
+                 infowindow.open(map, marker);
+               });
+
+              } else {
+                console.log('No results found');
+              }
+            } else {
+              console.log('Geocoder failed due to: ' + status);
+            }
+          });
+
 
          drawingManager = new google.maps.drawing.DrawingManager({
          drawingControl: editMode,
@@ -189,7 +262,8 @@
     }
 
     function onShapeComplete(shape) {
-      //alert(shape);
+      drawingManager.setOptions({drawingMode: null});
+
       if(savedShape){
         deleteShape();
       }

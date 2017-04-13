@@ -82,10 +82,19 @@ module.exports = function(app, passport) {
 // =====================================
 // TRACKING SECTION =================
 // =====================================
-    app.get('/track/:dog_id', isLoggedIn, function(req, res) {
+    app.get('/track/all', isLoggedIn, function(req, res) {
+      console.log(req.session.users_dog);
+
+      return res.render('track.ejs', {
+          user : req.user, // get the user out of session and pass to template
+          users_dog : req.session.users_dog
+      });
+    });
+
+
+    app.get('/track/dog/:dog_id', isLoggedIn, function(req, res) {
       var dog_id = req.params.dog_id;
       var selected_dog = req.session.users_dog.find(o => o._id === dog_id);
-
       var dogController = require('./controllers/dogController');
       var dogMethods = new dogController();
       var collar_id;
@@ -103,7 +112,7 @@ module.exports = function(app, passport) {
 
           gpsMethods.getGpsZone(req.session.collar_id, function(response){
             var gpsZone = response;
-            console.log("gpsZone  " + gpsZone);
+            console.log("selected_dog  " + JSON.stringify(lastPosition));
 
             return res.render('track.ejs', {
                 user : req.user, // get the user out of session and pass to template
@@ -185,15 +194,21 @@ module.exports = function(app, passport) {
 // INFO SECTION =================
 // =====================================
     app.get('/infos/:dog_id', isLoggedIn, function(req, res) {
+        var statsController = require('./controllers/statsController');
+        var statsMethods = new statsController();
+
       var dog_id = req.params.dog_id;
       var selected_dog = req.session.users_dog.find(o => o._id === dog_id);
 
-      res.render('infos.ejs', {
-          user : req.user, // get the user out of session and pass to template
-          users_dog : req.session.users_dog,
-          dog_id : dog_id,
-          selected_dog : selected_dog
-      });
+        statsMethods.getUnlockStats(selected_dog.collar_id, function(logStats) {
+            res.render('infos.ejs', {
+                user : req.user, // get the user out of session and pass to template
+                users_dog : req.session.users_dog,
+                dog_id : dog_id,
+                selected_dog : selected_dog,
+                logStats : logStats
+            });
+        });
     });
 
     // Edit dog

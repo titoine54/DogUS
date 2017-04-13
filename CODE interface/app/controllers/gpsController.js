@@ -11,13 +11,15 @@ var gpsController = function (){
       lastPosition =
         {
         latitude: list_dog_positions[0].latitude,
-        longitude: list_dog_positions[0].longitude
+        longitude: list_dog_positions[0].longitude,
+        timestamp: list_dog_positions[0].timestamp
         };
       } else {
         lastPosition =
           {
           latitude: null,
-          longitude: null
+          longitude: null,
+          timestamp: null
         };
       }
 
