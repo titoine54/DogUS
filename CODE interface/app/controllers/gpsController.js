@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 var gpsController = function (){
   var self = this;
 
@@ -54,7 +56,7 @@ var gpsController = function (){
     if (gps_latitude != 0 && gps_longitude != 0){
       var newgpsPosition = gpsPosition({
         collar_id: gps_collar_id,
-        timestamp: gps_timestamp,
+        timestamp: Date(gps_timestamp),
         latitude: gps_latitude,
         longitude: gps_longitude
       });
