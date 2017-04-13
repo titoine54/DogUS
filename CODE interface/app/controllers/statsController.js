@@ -40,7 +40,7 @@ var statsController = function (){
             var today = moment();
             var todayLogs = list_logs.filter(function (log) {
                 return moment(log.time).isSame(today, 'day');
-            });
+            }).length;
 
             var oneDayBefore = moment('00:00:00', 'hh:mm:ss a').subtract(1, 'day');
             var oneDayBeforeLogs = list_logs.filter(function (log) {
