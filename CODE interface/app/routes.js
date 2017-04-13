@@ -198,7 +198,9 @@ module.exports = function(app, passport) {
         var statsMethods = new statsController();
 
       var dog_id = req.params.dog_id;
-      var selected_dog = req.session.users_dog.find(o => o._id === dog_id);
+      var selected_dog = _.find(req.session.users_dog, function(dog) {
+          return dog._id === dog_id;
+      });
 
         statsMethods.getUnlockStats(selected_dog.collar_id, function(logStats) {
             res.render('infos.ejs', {
