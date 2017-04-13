@@ -55,7 +55,9 @@ const WebSocket = require('ws');
 const wss = new WebSocket.Server({ port: 8081 });
 
 wss.on('connection', function connection(ws) {
+  global.Gws = ws;
   ws.on('message', function incoming(message) {
+    app.set('WebSocket', WebSocket);
     console.log('Received: %s', message);
 
     var [start, type, collar_id] = message.split(',', 3);

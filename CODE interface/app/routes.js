@@ -169,6 +169,12 @@ module.exports = function(app, passport) {
       gpsMethods.changeGpsZone(collar_id, function(response){
 
         gpsMethods.addZoneToDB(collar_id, data, function(response){
+          console.log("Sending zone data for dog with collar :", collar_id);
+          var data_parsed = JSON.parse(data.center);
+          var zone_message = "$,Z," + collar_id + "," +  data_parsed.lat.toFixed(6) + "," +  data_parsed.lng.toFixed(6) + "," + JSON.parse(data.radius).toFixed(6);
+          var ws = req.app.get('WebSocket');
+            try { Gws.send(zone_message); }
+            catch (e) { console.log("Error : Client disconected"); }
           return;
         });
 
