@@ -126,7 +126,7 @@
                       labels: ['<%= logStats.labels[0] %>', '<%= logStats.labels[1] %>', '<%= logStats.labels[2] %>', '<%= logStats.labels[3] %>', '<%= logStats.labels[4] %>', '<%= logStats.labels[5] %>', '<%= logStats.labels[6] %>'],
                       datasets: [{
                           label: 'Nombre de sorties',
-                          data: [0,0,0,0,0,0,0],
+                          data: [<%= logStats.data %>],
                           backgroundColor: '<%= selected_dog.color %>'
 
                       }]
