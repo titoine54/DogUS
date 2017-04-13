@@ -11,7 +11,7 @@ var statsController = function (){
      */
     self.logUnlock = function (collar_id, callback){
         var unlockStats = require('../models/unlockStats');
-        var now = moment.now;
+        var now = moment.now();
 
         var newStat = unlockStats({
             collar_id: collar_id,
