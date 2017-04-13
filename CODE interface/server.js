@@ -72,7 +72,11 @@ wss.on('connection', function connection(ws) {
         break;
 
         case 'U' :
-          console.log("Unlocked door for dog with collar :", collar_id);
+            var statsController = require('./app/controllers/statsController');
+            var statsMethods = new statsController();
+            statsMethods.logUnlock(collar_id, function(){
+                return;
+            });
         break;
 
         case 'L' :

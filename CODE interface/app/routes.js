@@ -188,15 +188,21 @@ module.exports = function(app, passport) {
 // INFO SECTION =================
 // =====================================
     app.get('/infos/:dog_id', isLoggedIn, function(req, res) {
+        var statsController = require('./controllers/statsController');
+        var statsMethods = new statsController();
+
       var dog_id = req.params.dog_id;
       var selected_dog = req.session.users_dog.find(o => o._id === dog_id);
 
-      res.render('infos.ejs', {
-          user : req.user, // get the user out of session and pass to template
-          users_dog : req.session.users_dog,
-          dog_id : dog_id,
-          selected_dog : selected_dog
-      });
+        statsMethods.getUnlockStats(selected_dog.collar_id, function(logStats) {
+            res.render('infos.ejs', {
+                user : req.user, // get the user out of session and pass to template
+                users_dog : req.session.users_dog,
+                dog_id : dog_id,
+                selected_dog : selected_dog,
+                logStats : logStats
+            });
+        });
     });
 
     // Edit dog
